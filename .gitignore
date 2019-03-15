@@ -1,0 +1,16 @@
+*.exe
+*.dll
+*.pdb
+*.mdb
+*.userprefs
+*~
+*FilesWrittenAbsolute.txt
+*AssemblyAttribute.cs
+*.java
+*.cache
+bin/
+obj/
+\.vs/
+*.ide
+*/doxygen/*
+packages/*
