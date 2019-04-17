@@ -13,13 +13,28 @@ namespace Testing
         {
             QueryFactory query = new QueryFactory();
 
-            BillingCodeFactory factory = new BillingCodeFactory(query);
+            PeopleFactory peopleFactory = new PeopleFactory(query);
+            GenderFactory genderFactory = new GenderFactory(query);
+            AppointmentFactory appointmentFactory = new AppointmentFactory(query, peopleFactory);
+            BillingCodeFactory billingCodeFactory = new BillingCodeFactory(query);
+            BillableProcedureFactory bpFactory = new BillableProcedureFactory(query);
+            HouseholdFactory householdFactory = new HouseholdFactory(query);
 
-            List<BillingCode> codes = factory.Similar("Z");
-            
-            foreach(var a in codes)
+            Appointment appointment = appointmentFactory.Find(2);
+
+            bpFactory.SetBillableProcedures(appointment.Patient, new List<BillingCode> { billingCodeFactory.Find("A184") });
+
+            bpFactory.GetBillableProcedures(appointment.Patient).First().Status = bpFactory.StatusFactory.ContactMoH;
+
+            List<Appointment> apts = appointmentFactory.FindWithTimes();
+
+            foreach(Appointment apt in apts)
             {
-                Console.WriteLine(a);
+                Console.WriteLine(apt);
+                foreach(BillableProcedure bp in bpFactory.GetBillableProcedures(apt.Patient))
+                {
+                    Console.WriteLine("\t" + bp);
+                }
             }
 
         }
