@@ -1,7 +1,8 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -10,12 +11,15 @@ using System.Threading.Tasks;
 
 namespace EMSDatabase
 {
+    /// <summary>
+    /// Controls the sql connection and has proxy methods for creating queries and stored procedure calls.
+    /// </summary>
     public class QueryFactory
     {
         private string _connectionStr;
 
-        private MySqlConnection connection;
-
+        private SqlConnection connection;
+        
         public string ConnectionString
         {
             get => _connectionStr;
@@ -27,7 +31,8 @@ namespace EMSDatabase
 
                 if (_connectionStr != null)
                 {
-                    connection = new MySqlConnection(_connectionStr);
+                    Console.WriteLine("Trying to connect to " + _connectionStr);
+                    connection = new SqlConnection(_connectionStr);
                     connection.Open();
                 }
             }
@@ -45,15 +50,36 @@ namespace EMSDatabase
         /// <param name="query">The query.</param>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public MySqlCommand CreateQuery(string query, params object[] args)
+        public SqlCommand CreateQuery(string query, params object[] args)
         {
-            MySqlCommand cmd = new MySqlCommand(query, connection);
+            SqlCommand cmd = new SqlCommand(query, connection);
 
             for (int i = 0; i < args.Length; i++)
             {
-                cmd.Parameters.Add(new MySqlParameter(i.ToString(), args[i]));
+                SqlParameter param = cmd.CreateParameter();
+                param.ParameterName = i.ToString();
+                param.Value = args[i] ?? DBNull.Value;
+                cmd.Parameters.Add(param);
             }
+            
+            return cmd;
+        }
+        
+        public SqlCommand CreateProcedureCall(string name, Dictionary<string, object> values)
+        {
+            SqlCommand cmd = new SqlCommand(name, connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
 
+            foreach (string key in values.Keys)
+            {
+                SqlParameter param = cmd.CreateParameter();
+                param.ParameterName = key;
+                param.Value = values[key] ?? DBNull.Value;
+                cmd.Parameters.Add(param);
+            }
+            
             cmd.Prepare();
             return cmd;
         }
@@ -64,7 +90,7 @@ namespace EMSDatabase
         }
     }
 
-    public abstract class DatabaseRowFactoryBase<T, Q>
+    public abstract class DatabaseRowFactoryBase<T>
     {
 
         protected readonly QueryFactory queryFactory;
@@ -78,20 +104,20 @@ namespace EMSDatabase
 
         protected T Find(string query, params object[] args)
         {
-            using (MySqlCommand cmd = queryFactory.CreateQuery(query, args))
+            using (SqlCommand cmd = queryFactory.CreateQuery(query, args))
             {
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (ignoreExtras && reader.RecordsAffected > 1)
+                    if (!ignoreExtras && reader.RecordsAffected > 1)
                     {
-                        throw new ArgumentException("Too many rows returned, and ignoreExtras == true");
+                        throw new ArgumentException("Too many rows returned, and ignoreExtras == false");
                     }
                     
                     return reader.Read() ? CreateObject(reader) : default(T);
                 }
             }
         }
-
+        
         /// <summary>
         /// Finds many items.
         /// </summary>
@@ -100,9 +126,9 @@ namespace EMSDatabase
         /// <returns>The list of all rows returned</returns>
         protected List<T> FindMany(string query, params object[] args)
         {
-            using (MySqlCommand cmd = queryFactory.CreateQuery(query, args))
+            using (SqlCommand cmd = queryFactory.CreateQuery(query, args))
             {
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     List<T> objs = new List<T>();
 
@@ -116,7 +142,7 @@ namespace EMSDatabase
             }
         }
         
-        protected abstract T CreateObject(MySqlDataReader reader);
+        protected abstract T CreateObject(SqlDataReader reader);
     }
     
     public class DatabaseRowObjectAdapter
@@ -127,20 +153,18 @@ namespace EMSDatabase
         /// <typeparam name="T">The type of the object to fill</typeparam>
         /// <param name="obj">The object to fill</param>
         /// <param name="reader">The SQL reader to get data from</param>
-        /// <param name="objFieldPrefix">The prefix to add to the front of object field names</param>
-        /// <param name="colFieldPrefix">The prefix to add to the front of SQL column names</param>
         /// <param name="ignoreCase">Ignore case when checking column and field names</param>
         /// <param name="errorOnInvalidFields">Throw an exception when a field with no matching column is found</param>
         /// <exception cref="InvalidOperationException">When the object has a field with no matching column,
         /// and <code>errorOnInvalidFields</code> is true</exception>
-        /// <returns></returns>
-        public static T Fill<T>(T obj, MySqlDataReader reader, bool ignoreCase = true, bool errorOnInvalidFields = false)
+        /// <returns>obj</returns>
+        public static T Fill<T>(T obj, SqlDataReader reader, bool ignoreCase = true, bool errorOnInvalidFields = false)
         {
             foreach(FieldInfo field in obj.GetType().GetFields())
             {
                 // Try to find a 'SQLColumnBinding' on the field, but if not found, just use the field name
                 string name = field.GetCustomAttribute<SQLColumnBinding>()?.ColumnName ?? field.Name;
-
+                
                 int column = FindColumn(name, reader, ignoreCase);
 
                 if(column == -1 && errorOnInvalidFields)
@@ -150,14 +174,14 @@ namespace EMSDatabase
 
                 if(column != -1)
                 {
-                    obj = SetField(field, obj, reader, column);
+                    SetField(field, ref obj, reader, column);
                 }
             }
 
             return obj;
         }
 
-        private static int FindColumn(string name, MySqlDataReader reader, bool ignoreCase)
+        private static int FindColumn(string name, SqlDataReader reader, bool ignoreCase)
         {
             for(int i = 0; i < reader.FieldCount; i++)
             {
@@ -170,17 +194,18 @@ namespace EMSDatabase
             return -1;
         }
 
-        private static T SetField<T>(FieldInfo field, T obj, MySqlDataReader reader, int column)
+        private static void SetField<T>(FieldInfo field, ref T obj, SqlDataReader reader, int column)
         {
             if(reader.IsDBNull(column))
             {
                 field.SetValue(obj, null);
-                return obj;
+                return;
             }
 
             if(field.GetCustomAttribute<EnumSQLColumn>() != null)
             {
-                return SetPEnumField(field, obj, reader.GetString(column));
+                SetPEnumField(field, obj, reader.GetString(column));
+                return;
             }
 
             Type colType = reader.GetFieldType(column);
@@ -208,12 +233,14 @@ namespace EMSDatabase
             {
                 field.SetValue(obj, reader.GetDateTime(column));
             }
+            else if (colType == typeof(bool))
+            {
+                field.SetValue(obj, reader.GetBoolean(column));
+            }
             else
             {
                 throw new InvalidOperationException("Unknown data type " + colType);
             }
-
-            return obj;
         }
 
         private static T SetPEnumField<T>(FieldInfo field, T obj, string data)
@@ -235,7 +262,7 @@ namespace EMSDatabase
     }
 
     /// <summary>
-    /// When used on a field, allows <see cref="DatabaseRowObjectAdapter.Fill{T}(T, MySqlDataReader, string, string, bool, bool)"/>
+    /// When used on a field, allows <see cref="DatabaseRowObjectAdapter.Fill{T}(T, SqlDataReader, string, string, bool, bool)"/>
     /// to copy the data from 'ColumnName' into the field.
     /// </summary>
     public class SQLColumnBinding: Attribute
@@ -253,13 +280,16 @@ namespace EMSDatabase
     /// </summary>
     public class EnumSQLColumn: Attribute {}
 
-    public class DynamicSQLQuery: List<(string, object)>
+    /// <summary>
+    /// Builds an sql where clause
+    /// </summary>
+    public class SqlWhereClauseBuilder: List<(string, object)>
     {
-        public string ClauseSeparator = " AND ";
-
+        public string ClauseSeparator { get; set; } = " AND ";
+        
         /// <summary>
         /// Tries to add a condition if the given value doesn't equal the illegalValue.
-        /// The variable (@n) in the clause must be replaced with '{0}'
+        /// The variable (@...) in the clause must be replaced with '{0}'
         /// </summary>
         /// <remarks>
         /// Example clause:
@@ -275,15 +305,41 @@ namespace EMSDatabase
         /// </remarks>
         public void TryAddCondition<T>(string clause, T value, T illegalValue = default(T))
         {
-            if(!value.Equals(illegalValue))
+            if(!EqualityComparer<T>.Default.Equals(value, illegalValue))
             {
                 Add((clause, value));
             }
         }
         
+        /// <summary>
+        /// Always adds a condition
+        /// </summary>
+        /// <param name="clause">The clause (see TryAddCondition)</param>
+        /// <param name="value">The value</param>
         public void AddCondition(string clause, object value)
         {
             Add((clause, value));
+        }
+        
+        /// <summary>
+        /// Adds a condition, throwing an exception if it is invalid.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="clause">The where-clause segment</param>
+        /// <param name="value">The where-clause value</param>
+        /// <param name="argname">The argument's name in the error message</param>
+        /// <param name="illegalValue">The illegal value</param>
+        /// <exception cref="ArgumentException">If the value equals the illegalValue</exception>
+        public void AddManditoryCondition<T>(string clause, T value, string argname, T illegalValue = default(T))
+        {
+            if (!EqualityComparer<T>.Default.Equals(value, illegalValue))
+            {
+                Add((clause, value));
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("{0} is not valid (was '{1}')", argname, value));
+            }
         }
 
         /// <summary>
@@ -312,5 +368,81 @@ namespace EMSDatabase
 
             return (str.ToString(), objs);
         }
+        
+    }
+
+    /// <summary>
+    /// Builds an sql insert query for a single row
+    /// </summary>
+    class SqlInsertBuilder : List<(string, object)>
+    {
+        /// <summary>
+        /// The table to insert into.
+        /// </summary>
+        public string Table { get; set; }
+        
+        /// <summary>
+        /// Tries to add a column, doing nothing if the parameter is invalid
+        /// </summary>
+        /// <param name="colName">The column's name</param>
+        /// <param name="colValue">The column's value</param>
+        /// <param name="illegalValue">The illegal value (null for objects)</param>
+        public void TryAddColumn<T>(string colName, T colValue, T illegalValue = default(T))
+        {
+            if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
+            {
+                Add((colName, colValue));
+            }
+        }
+
+        /// <summary>
+        /// Tries to add a column, failing if the parameter is invalid
+        /// </summary>
+        /// <param name="colName">The column's name</param>
+        /// <param name="colValue">The column's value</param>
+        /// <param name="illegalValue">The illegal value (null for objects)</param>
+        /// <exception cref="ArgumentException">If the column value is invalid</exception>
+        public void AddManditoryColumn<T>(string colName, T colValue, T illegalValue = default(T))
+        {
+            if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
+            {
+                Add((colName, colValue));
+            }
+            {
+                throw new ArgumentException(string.Format("Column {0} is an invalid value", colName));
+            }
+        }
+
+        /// <summary>
+        /// Builds the query and returns it.
+        /// </summary>
+        public string GetQuery()
+        {
+            string columns = "", values = "";
+            
+            for(int i = 0; i < Count; i++)
+            {
+                columns += (i > 0 ? ", " : "") + "[" + this[i].Item1 + "]";
+                values += (i > 0 ? ", " : "") + "@" + i;
+            }
+
+            return string.Format("INSERT INTO [{0}] ({1}) VALUES ({2})", Table, columns, values);
+        }
+
+        /// <summary>
+        /// Gathers the column's values and returns them in an array.
+        /// </summary>
+        public object GetValues()
+        {
+            object[] objs = new object[this.Count];
+
+            for(int i = 0; i < Count; i++)
+            {
+                objs[i] = this[i].Item2;
+            }
+
+            return objs;
+        }
+
     }
 }
