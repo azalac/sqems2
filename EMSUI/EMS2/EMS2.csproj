@@ -100,7 +100,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\sqems2-DAL\EMSDatabase\EMSDatabase.csproj">
+    <ProjectReference Include="..\..\EMSDatabase\EMSDatabase.csproj">
       <Project>{2F605564-2E83-41F3-BC18-6396186D45E6}</Project>
       <Name>EMSDatabase</Name>
     </ProjectReference>
