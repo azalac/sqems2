@@ -131,6 +131,11 @@ namespace EMSDatabase
         public readonly string PatientHCN, CaregiverHCN, PatientName, CaregiverName;
         
         /// <summary>
+        /// Calls Display
+        /// </summary>
+        public string display { get => Display(); }
+
+        /// <summary>
         /// Calls GetPatient
         /// </summary>
         public AppointmentPatient Patient { get => GetPatient(); }
@@ -169,7 +174,23 @@ namespace EMSDatabase
             return string.Format("Appointment[ID={0}, {1}/{2}/{3} Timeslot {4}, Patient='{5}', Caregiver='{6}']",
                 ID, Day, Month, Year, Timeslot, PatientName, CaregiverName);
         }
+        
+        /// <summary>
+        /// Formats a string to display
+        /// </summary>
+        /// <returns></returns>
+        public string Display()
+        {
+            string dis =  string.Format("Date: {0}/{1}/{2} Timeslot: {3}\nPatient: '{4}'\n",
+                 Day, Month, Year, Timeslot, PatientName);
 
+            if (CaregiverName != "")
+            {
+                dis += string.Format("Caregiver: '{0}'", CaregiverName);
+            }
+
+            return dis;
+        }
     }
 
     /// <summary>
