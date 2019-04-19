@@ -1,12 +1,14 @@
-﻿using EMSDatabase;
+﻿/// PROJECT: EMS2
+/// FILE: appointmentBilling.cs
+/// AUTHOR: Billy Parmenter
+/// DATE: April 19 - 2019
+/// DESCRIPTION: This form will use the selected appointment from the
+///                 calendar from the main form and allow the user to
+///                 add and or remove billing codes from it
+
+using EMSDatabase;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EMS2
