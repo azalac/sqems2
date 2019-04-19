@@ -100,7 +100,7 @@ namespace EMSDatabase
         /// <summary>
         /// Gets or sets the head of house (Person ID)
         /// </summary>
-        public int HeadOfHouse { get => GetHeadOfHouse(); set => SetHeadOfHouse(value); }
+        public int? HeadOfHouse { get => GetHeadOfHouse(); set => SetHeadOfHouse(value); }
 
         public readonly int ID;
 
