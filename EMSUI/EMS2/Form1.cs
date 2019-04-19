@@ -14,10 +14,10 @@ namespace EMS2
 {
     public partial class Form1 : Form
     {
-        private static QueryFactory queryFactory = new QueryFactory();
-        private static PeopleFactory peopleFactory = new PeopleFactory(queryFactory);
-        private AppointmentFactory appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
-        private HouseholdFactory householdFactory = new HouseholdFactory(queryFactory);
+        private QueryFactory queryFactory = new QueryFactory();
+        private PeopleFactory peopleFactory;
+        private AppointmentFactory appointmentFactory;
+        private HouseholdFactory householdFactory;
 
 
         private Dictionary<TextBox, Label> textLabels;
@@ -30,17 +30,12 @@ namespace EMS2
         private List<Person> found = new List<Person>();
 
 
-        private static TimeSlot selectedSlot;
-        private static Appointment selectedAppointment;
+        private TimeSlot selectedSlot;
+        private Appointment selectedAppointment;
         private Person foundPerson;
 
         Color red = Color.Red;
         Color black = Color.Black;
-
-
-        internal static TimeSlot SelectedSlot { get => selectedSlot; set => selectedSlot = value; }
-        internal static Appointment SelectedAppointment { get => selectedAppointment; set => selectedAppointment = value; }
-
 
 
 
@@ -49,6 +44,9 @@ namespace EMS2
         /// </summary>
         public Form1()
         {
+            peopleFactory = new PeopleFactory(queryFactory);
+            appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
+            householdFactory = new HouseholdFactory(queryFactory);
             InitializeComponent();
 
             SetDictionaries();
@@ -422,7 +420,7 @@ namespace EMS2
             {
                 selectedSlot = timeSlot;
 
-                FindPatientWindow fpw = new FindPatientWindow();
+                FindPatientWindow fpw = new FindPatientWindow(selectedSlot);
                 fpw.ShowDialog();
             }
             if (timeSlot.available == false)
@@ -437,7 +435,7 @@ namespace EMS2
                     }
                 }
 
-                appointmentBilling abw = new appointmentBilling();
+                appointmentBilling abw = new appointmentBilling(selectedAppointment);
                 abw.ShowDialog();
             }
         }
