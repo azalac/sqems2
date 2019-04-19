@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMS2", "EMS2\EMS2.csproj", "{3120AA43-AA08-4116-AD9D-68EBFEA7BB70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMSDatabase", "..\sqems2-DAL\EMSDatabase\EMSDatabase.csproj", "{2F605564-2E83-41F3-BC18-6396186D45E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMSDatabase", "..\EMSDatabase\EMSDatabase.csproj", "{2F605564-2E83-41F3-BC18-6396186D45E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
