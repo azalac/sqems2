@@ -104,7 +104,10 @@ namespace EMSDatabase
 
         public readonly int ID;
 
-        public readonly string AddressLine1, AddressLine2, City, Province, PhoneNumber;
+        public readonly string AddressLine1, AddressLine2, City, Province;
+
+        [SQLColumnBinding("numPhone")]
+        public readonly string PhoneNumber;
         
         private QueryFactory queryFactory;
 
