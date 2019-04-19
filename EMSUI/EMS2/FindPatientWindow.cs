@@ -32,7 +32,7 @@ namespace EMS2
         private List<Person> people;
 
         // The timeSlot selected from the main form
-        private TimeSlot timeSlot = Form1.SelectedSlot;
+        private TimeSlot timeSlot;
 
         // Holds a textBox and its corresponding listBox
         Dictionary<TextBox, ListBox> pairs = new Dictionary<TextBox, ListBox>();
@@ -44,8 +44,10 @@ namespace EMS2
         /// <summary>
         /// The form constructor
         /// </summary>
-        public FindPatientWindow()
+        public FindPatientWindow(TimeSlot slot)
         {
+            timeSlot = slot;
+
             InitializeComponent();
 
             pairs.Add(patientSearchTB, foundPatients);
