@@ -58,7 +58,7 @@
             this.patientSearchTB.Size = new System.Drawing.Size(142, 20);
             this.patientSearchTB.TabIndex = 1;
             this.patientSearchTB.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
-            this.patientSearchTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.patientSearchTB_KeyDown);
+            this.patientSearchTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchTextBox_KeyDown);
             this.patientSearchTB.Leave += new System.EventHandler(this.FindPerson);
             // 
             // label2
@@ -153,7 +153,7 @@
             this.cancel.TabIndex = 11;
             this.cancel.Text = "Cancel";
             this.cancel.UseVisualStyleBackColor = true;
-            this.cancel.Click += new System.EventHandler(this.Close);
+            this.cancel.Click += new System.EventHandler(this.Close_Click);
             // 
             // FindPatientWindow
             // 
