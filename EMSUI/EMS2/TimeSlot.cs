@@ -15,7 +15,7 @@ namespace EMS2
     /// <summary>
     /// This class represents a timeslot
     /// </summary>
-    class TimeSlot
+    public class TimeSlot
     {
         public int slotID;
         public DateTime date;
