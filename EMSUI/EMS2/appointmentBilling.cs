@@ -24,7 +24,7 @@ namespace EMS2
         private AppointmentPatientFactory appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
 
         // Appointment selected from the main form
-        private Appointment appointment = Form1.SelectedAppointment;
+        private Appointment appointment;
         
        
         private AppointmentPatient appointmentPatient = new AppointmentPatient(appointmentFactory, peopleFactory);
@@ -38,8 +38,10 @@ namespace EMS2
         /// <summary>
         /// Constructor for form
         /// </summary>
-        public appointmentBilling()
+        public appointmentBilling(Appointment app)
         {
+            appointment = app;
+
             InitializeComponent();
 
             appointmentInfo.Text = appointment.Display();
