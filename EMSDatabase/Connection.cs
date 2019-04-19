@@ -433,7 +433,7 @@ namespace EMSDatabase
         /// <summary>
         /// Gathers the column's values and returns them in an array.
         /// </summary>
-        public object GetValues()
+        public object[] GetValues()
         {
             object[] objs = new object[this.Count];
 
