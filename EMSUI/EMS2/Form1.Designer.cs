@@ -307,7 +307,6 @@
             this.lNameTextBox.TabIndex = 1;
             this.lNameTextBox.TabStop = false;
             this.lNameTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
-            this.lNameTextBox.Leave += new System.EventHandler(this.lNameTextBox_Leave);
             // 
             // generateFileButton
             // 
@@ -318,7 +317,7 @@
             this.generateFileButton.Text = "Generate File";
             this.generateFileButton.UseVisualStyleBackColor = true;
             this.generateFileButton.Visible = false;
-            this.generateFileButton.Click += new System.EventHandler(this.generateFileButton_Click);
+            this.generateFileButton.Click += new System.EventHandler(this.GenerateFileButton_Click);
             // 
             // generateSummaryButton
             // 
@@ -375,8 +374,8 @@
             this.appSlots.Name = "appSlots";
             this.appSlots.Size = new System.Drawing.Size(157, 160);
             this.appSlots.TabIndex = 1;
-            this.appSlots.KeyDown += new System.Windows.Forms.KeyEventHandler(this.appSlots_KeyDown);
-            this.appSlots.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.appSlots_MouseDoubleClick);
+            this.appSlots.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
+            this.appSlots.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.AppSlots_MouseDoubleClick);
             // 
             // monthCalendar1
             // 
@@ -386,7 +385,7 @@
             this.monthCalendar1.TabIndex = 0;
             this.monthCalendar1.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.DateSelected);
             this.monthCalendar1.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.DateSelected);
-            this.monthCalendar1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.monthCalendar1_KeyDown);
+            this.monthCalendar1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // tabPage2
             // 
@@ -449,7 +448,7 @@
             this.patientSearchTB.Name = "patientSearchTB";
             this.patientSearchTB.Size = new System.Drawing.Size(119, 20);
             this.patientSearchTB.TabIndex = 36;
-            this.patientSearchTB.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.patientSearchTB.TextChanged += new System.EventHandler(this.Search_TextChanged);
             // 
             // patientMessage
             // 

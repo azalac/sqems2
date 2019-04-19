@@ -33,21 +33,20 @@ namespace EMS2
         private static TimeSlot selectedSlot;
         private static Appointment selectedAppointment;
         private Person foundPerson;
-        private Household household;
-        private Person houseHead;
 
-
-        Color red = System.Drawing.Color.Red;
-        Color black = System.Drawing.Color.Black;
+        Color red = Color.Red;
+        Color black = Color.Black;
 
 
         internal static TimeSlot SelectedSlot { get => selectedSlot; set => selectedSlot = value; }
         internal static Appointment SelectedAppointment { get => selectedAppointment; set => selectedAppointment = value; }
 
-        //billing responcee
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -64,6 +63,49 @@ namespace EMS2
 
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetDictionaries()
+        {
+            textLabels = new Dictionary<TextBox, Label>()
+            {
+                {healthCardTextBox, HCNLabel },
+                {lNameTextBox, lNameLabel },
+                {fNameTextBox, fNameLabel },
+                {mInitialTextBox, mInitialLabel },
+                {address1TextBox, add1Label },
+                {address2TextBox, add2Label },
+                {cityTextBox, cityLabel },
+                {phoneNumberTextBox, phoneLabel },
+                {headOfHouseTextBox, HOHLabel }
+            };
+
+            headTextLabels = new Dictionary<TextBox, Label>()
+            {
+                {address1TextBox, add1Label },
+                {cityTextBox, cityLabel },
+                {phoneNumberTextBox, phoneLabel }
+            };
+
+            personTextLabels = new Dictionary<TextBox, Label>()
+            {
+                {healthCardTextBox, HCNLabel },
+                {lNameTextBox, lNameLabel },
+                {fNameTextBox, fNameLabel },
+                {mInitialTextBox, mInitialLabel },
+            };
+        }
+
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="update"></param>
         private void ClearPatientInfo(bool update)
         {
             foreach (KeyValuePair<TextBox, Label> textLabel in textLabels)
@@ -82,6 +124,15 @@ namespace EMS2
             dateOfBirthDTP.Value = DateTime.Today;
         }
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="update"></param>
+        /// <returns></returns>
         private bool CheckNullPatientInfo(bool update = false)
         {
             int error = 0;
@@ -119,6 +170,15 @@ namespace EMS2
             return ret;
         }
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HeadOfHouseTextBox_TextChanged(object sender, EventArgs e)
        {
             if (headOfHouseTextBox.Text != "")
@@ -145,6 +205,13 @@ namespace EMS2
 
        
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
             TextBox senderObj = sender as TextBox;
@@ -152,11 +219,30 @@ namespace EMS2
             CheckNull(senderObj, textLabels[senderObj]);
         }
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SexCBIndexChanged(object sender, EventArgs e)
         {
             sexLabel.ForeColor = black;
         }
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tb"></param>
+        /// <param name="label"></param>
+        /// <returns></returns>
         private int CheckNull(TextBox tb, Label label)
         {
             if (tb.Text == "")
@@ -171,43 +257,30 @@ namespace EMS2
             }
         }
 
-        private void SetDictionaries()
-        {
-            textLabels = new Dictionary<TextBox, Label>()
-            {
-                {healthCardTextBox, HCNLabel },
-                {lNameTextBox, lNameLabel },
-                {fNameTextBox, fNameLabel },
-                {mInitialTextBox, mInitialLabel },
-                {address1TextBox, add1Label },
-                {address2TextBox, add2Label },
-                {cityTextBox, cityLabel },
-                {phoneNumberTextBox, phoneLabel },
-                {headOfHouseTextBox, HOHLabel }
-            };
 
-            headTextLabels = new Dictionary<TextBox, Label>()
-            {
-                {address1TextBox, add1Label },
-                {cityTextBox, cityLabel },
-                {phoneNumberTextBox, phoneLabel }
-            };
 
-            personTextLabels = new Dictionary<TextBox, Label>()
-            {
-                {healthCardTextBox, HCNLabel },
-                {lNameTextBox, lNameLabel },
-                {fNameTextBox, fNameLabel },
-                {mInitialTextBox, mInitialLabel },
-            };
-        }
 
-        private void generateFileButton_Click(object sender, EventArgs e)
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GenerateFileButton_Click(object sender, EventArgs e)
         {
             
         }
 
 
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateButton_Click(object sender, EventArgs e)
         {
             if (CheckNullPatientInfo(true) == false)
@@ -220,6 +293,15 @@ namespace EMS2
             }
         }
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddPatientButton_Click(object sender, EventArgs e)
         {
             if (CheckNullPatientInfo() == false)
@@ -228,11 +310,9 @@ namespace EMS2
                 if(headOfHouseTextBox.Text != "")
                 {
                     found = peopleFactory.Find(null, null, null, headOfHouseTextBox.Text);
-                    houseHead = found[0];
-                    houseID = houseHead.GetHousehold();
+                    houseID = found[0].GetHousehold();
                 }
-                peopleFactory.Create("T", 'E', "S", "T", DateTime.Today, 1);
-                peopleFactory.Create(fNameTextBox.Text, mInitialTextBox.Text[0], lNameTextBox.Text, healthCardTextBox.Text, dateOfBirthDTP.Value, sexComboBox.SelectedIndex, houseID);
+                peopleFactory.Create(fNameTextBox.Text, mInitialTextBox.Text[0], lNameTextBox.Text, healthCardTextBox.Text, dateOfBirthDTP.Value, sexComboBox.SelectedIndex + 1, houseID);
                
             }
             else
@@ -241,23 +321,42 @@ namespace EMS2
             }
         }
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DateSelected(object sender, DateRangeEventArgs e)
         {
             GetSlots(monthCalendar1.SelectionStart);
         }
 
-        private void appSlots_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (slots[appSlots.SelectedIndex].available == true)
-            {
-                selectedSlot = slots[appSlots.SelectedIndex];
 
-                FindPatientWindow fpw = new FindPatientWindow();
-                fpw.ShowDialog();
-            }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AppSlots_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            SlotSelected(slots[appSlots.SelectedIndex]);
         }
 
 
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="date"></param>
         private void GetSlots(DateTime date)
         {
             appointments = appointmentFactory.FindWithTimes(date.Year, date.Month, date.Day);
@@ -268,19 +367,16 @@ namespace EMS2
 
         }
 
-        private void appSlots_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && slots[appSlots.SelectedIndex].available == true)
-            {
-                selectedSlot = slots[appSlots.SelectedIndex];
-
-                FindPatientWindow fpw = new FindPatientWindow();
-                fpw.ShowDialog();
-            }
-        }
-
        
-        private void monthCalendar1_KeyDown(object sender, KeyEventArgs e)
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Control_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode >= Keys.D1 && e.KeyCode <= Keys.D4)
             {
@@ -309,16 +405,29 @@ namespace EMS2
                 }
             }
 
-            if (e.KeyCode == Keys.Enter && slots[appSlots.SelectedIndex].available == true)
+            if (e.KeyCode == Keys.Enter)
             {
-                selectedSlot = slots[appSlots.SelectedIndex];
+                SlotSelected(slots[appSlots.SelectedIndex]);
+            }
+        }
+
+
+
+
+
+
+        private void SlotSelected(TimeSlot timeSlot)
+        {
+            if (timeSlot.available == true)
+            {
+                selectedSlot = timeSlot;
 
                 FindPatientWindow fpw = new FindPatientWindow();
                 fpw.ShowDialog();
             }
-            if (e.KeyCode == Keys.Enter && slots[appSlots.SelectedIndex].available == false)
+            if (timeSlot.available == false)
             {
-                selectedSlot = slots[appSlots.SelectedIndex];
+                selectedSlot = timeSlot;
 
                 foreach (Appointment app in appointments)
                 {
@@ -333,12 +442,16 @@ namespace EMS2
             }
         }
 
-        private void lNameTextBox_Leave(object sender, EventArgs e)
-        {
-            fNameTextBox.Enabled = true;
-        }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Search_TextChanged(object sender, EventArgs e)
         {
             found = peopleFactory.Find(null, null, null, patientSearchTB.Text);
             if (found.Count == 1)
@@ -357,11 +470,10 @@ namespace EMS2
 
                 if (houseID != null)
                 {
-                    HouseholdFactory householdFactory = new HouseholdFactory(queryFactory);
                     Household household = householdFactory.Find((int)houseID);
                     if (household.HeadOfHouse != null)
                     {
-                        houseHead = peopleFactory.Find((int)household.HeadOfHouse);
+                         Person houseHead = peopleFactory.Find((int)household.HeadOfHouse);
 
 
                         headOfHouseTextBox.Text = houseHead.HCN;
