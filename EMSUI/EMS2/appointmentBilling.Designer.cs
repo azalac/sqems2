@@ -73,7 +73,7 @@
             this.addBillingCode.TabIndex = 3;
             this.addBillingCode.Text = "Add";
             this.addBillingCode.UseVisualStyleBackColor = true;
-            this.addBillingCode.Click += new System.EventHandler(this.addBillingCode_Click);
+            this.addBillingCode.Click += new System.EventHandler(this.Add_Click);
             // 
             // removeBillingCode
             // 
@@ -83,7 +83,7 @@
             this.removeBillingCode.TabIndex = 4;
             this.removeBillingCode.Text = "Remove";
             this.removeBillingCode.UseVisualStyleBackColor = true;
-            this.removeBillingCode.Click += new System.EventHandler(this.removeBillingCode_Click);
+            this.removeBillingCode.Click += new System.EventHandler(this.Remove_Click);
             // 
             // billingFinish
             // 
@@ -93,7 +93,7 @@
             this.billingFinish.TabIndex = 5;
             this.billingFinish.Text = "Finish";
             this.billingFinish.UseVisualStyleBackColor = true;
-            this.billingFinish.Click += new System.EventHandler(this.billingFinish_Click);
+            this.billingFinish.Click += new System.EventHandler(this.Finish_Click);
             // 
             // billingCodeTB
             // 
