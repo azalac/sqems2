@@ -408,6 +408,7 @@ namespace EMSDatabase
             {
                 Add((colName, colValue));
             }
+            else
             {
                 throw new ArgumentException(string.Format("Column {0} is an invalid value", colName));
             }
