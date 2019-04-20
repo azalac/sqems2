@@ -12,7 +12,7 @@ using EMSDatabase;
 
 namespace EMS2
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private QueryFactory queryFactory = new QueryFactory();
         private PeopleFactory peopleFactory;
@@ -42,7 +42,7 @@ namespace EMS2
         /// <summary>
         /// 
         /// </summary>
-        public Form1()
+        public MainForm()
         {
             peopleFactory = new PeopleFactory(queryFactory);
             appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
