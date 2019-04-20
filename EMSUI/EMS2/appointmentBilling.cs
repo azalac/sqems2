@@ -94,6 +94,8 @@ namespace EMS2
             if (code != null)
             {
                 billingCodes.Add(code);
+
+                UpdateList();
             }
 
 
