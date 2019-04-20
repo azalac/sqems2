@@ -227,7 +227,7 @@
             this.headOfHouseTextBox.Name = "headOfHouseTextBox";
             this.headOfHouseTextBox.Size = new System.Drawing.Size(119, 20);
             this.headOfHouseTextBox.TabIndex = 6;
-            this.headOfHouseTextBox.TextChanged += new System.EventHandler(this.HeadOfHouseTextBox_TextChanged);
+            this.headOfHouseTextBox.TextChanged += new System.EventHandler(this.HouseHeadText_Changed);
             // 
             // HOHLabel
             // 
