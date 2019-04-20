@@ -310,8 +310,24 @@ namespace EMS2
                     found = peopleFactory.Find(null, null, null, headOfHouseTextBox.Text);
                     houseID = found[0].GetHousehold();
                 }
-                peopleFactory.Create(fNameTextBox.Text, mInitialTextBox.Text[0], lNameTextBox.Text, healthCardTextBox.Text, dateOfBirthDTP.Value, sexComboBox.SelectedIndex + 1, houseID);
-               
+                Person createdPerson = peopleFactory.Create(fNameTextBox.Text, mInitialTextBox.Text[0], lNameTextBox.Text, healthCardTextBox.Text, dateOfBirthDTP.Value, sexComboBox.SelectedIndex + 1, houseID);
+
+                Household household = new Household(queryFactory);
+
+                if (headOfHouseTextBox.Text == "")
+                {
+                    household = householdFactory.FindOrCreate(address1TextBox.Text, address2TextBox.Text, cityTextBox.Text, (string)provinceComboBox.SelectedItem, phoneNumberTextBox.Text);
+
+                    household.HeadOfHouse = createdPerson.ID;
+                }
+                else
+                {
+                    Person hoh = peopleFactory.Find(null, null, null, headOfHouseTextBox.Text)[0];
+
+                    household = householdFactory.Find((int)hoh.HouseholdID);
+                }
+
+                createdPerson.HouseholdID = household.ID;
             }
             else
             {
