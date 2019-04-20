@@ -37,7 +37,7 @@
             this.billingCodeTB = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.recallCB = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -120,25 +120,25 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "Recall";
             // 
-            // comboBox1
+            // recallCB
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.recallCB.FormattingEnabled = true;
+            this.recallCB.Items.AddRange(new object[] {
             "None",
             "1 Week",
             "2 Weeks",
             "3 Weeks"});
-            this.comboBox1.Location = new System.Drawing.Point(57, 351);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(69, 21);
-            this.comboBox1.TabIndex = 9;
+            this.recallCB.Location = new System.Drawing.Point(57, 351);
+            this.recallCB.Name = "recallCB";
+            this.recallCB.Size = new System.Drawing.Size(69, 21);
+            this.recallCB.TabIndex = 9;
             // 
             // appointmentBilling
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(219, 379);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.recallCB);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.billingCodeTB);
@@ -166,6 +166,6 @@
         private System.Windows.Forms.TextBox billingCodeTB;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox recallCB;
     }
 }

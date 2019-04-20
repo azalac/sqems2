@@ -31,7 +31,8 @@ namespace EMS2
         private List<BillableProcedure> billableProcedures = new List<BillableProcedure>();
         private List<BillingCode> billingCodes = new List<BillingCode>();
 
-
+        public int recallWeeks;
+        public DateTime appointmentDate;
 
 
 
@@ -51,7 +52,7 @@ namespace EMS2
             billableProcedures = billableProcedureFactory.GetBillableProcedures(appointmentPatient);
 
             // Converts the found list of billable procedures to a list of billing codes 
-            procedureToCode();
+            ProcedureToCode();
 
             billingCodeBox.DataSource = billingCodes;
             billingCodeBox.DisplayMember = "Display";
@@ -70,6 +71,10 @@ namespace EMS2
         private void Finish_Click(object sender, EventArgs e)
         {
             billableProcedureFactory.SetBillableProcedures(appointmentPatient, billingCodes);
+
+            this.recallWeeks = recallCB.SelectedIndex;
+
+            this.appointmentDate = new DateTime(appointment.Year, appointment.Month, appointment.Day);
 
             this.Close();
         }
@@ -120,7 +125,7 @@ namespace EMS2
         /// <summary>
         /// add thebilling codes of the found billableProcedures to the listBox
         /// </summary>
-        private void procedureToCode()
+        private void ProcedureToCode()
         {
             foreach (BillableProcedure procedure in billableProcedures)
             {
