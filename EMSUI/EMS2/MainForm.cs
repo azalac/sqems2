@@ -402,6 +402,8 @@ namespace EMS2
 
                         calendar.RemoveAllBoldedDates();
                         calendar.UpdateBoldedDates();
+
+                        GetSlots(calendar.SelectionStart);
                     }
                 }
                 else
