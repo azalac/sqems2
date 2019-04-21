@@ -70,7 +70,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scheduling.cs" />
     <Compile Include="TimeSlot.cs" />
     <Compile Include="UI.cs" />
     <EmbeddedResource Include="AppointmentBilling.resx">
