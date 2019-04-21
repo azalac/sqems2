@@ -15,17 +15,15 @@ namespace EMS2
     public partial class MainForm : Form
     {
         private QueryFactory queryFactory = new QueryFactory();
-        private PeopleFactory peopleFactory;
         private AppointmentFactory appointmentFactory;
-        private HouseholdFactory householdFactory;
-        private AppointmentPatientFactory appointmentPatientFactory;
-        private GenderFactory genderFactory;
-        private BillableProcedureFactory billableProcedureFactory;
+        private PeopleFactory peopleFactory;
+
 
         private Billing billing = new Billing();
         private UI ui = new UI();
         private Demographics demographics = new Demographics();
         private TimeSlotFactory timeSlotFactory = new TimeSlotFactory();
+
 
         private Dictionary<TextBox, Label> textLabels;
         private Dictionary<ComboBox, Label> comboBoxLabels;
@@ -34,13 +32,8 @@ namespace EMS2
 
 
         private List<Appointment> appointments;
-        
-        private List<Person> found = new List<Person>();
+       
 
-
-        private TimeSlot selectedSlot;
-        private Appointment selectedAppointment;
-        private Person foundPerson;
         private Appointment recallAppointment;
 
         Color red = Color.Red;
@@ -53,14 +46,11 @@ namespace EMS2
         /// </summary>
         public MainForm()
         {
-            peopleFactory = new PeopleFactory(queryFactory);
             appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
-            householdFactory = new HouseholdFactory(queryFactory);
-            appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
-            genderFactory = new GenderFactory(queryFactory);
-            billableProcedureFactory = new BillableProcedureFactory(queryFactory);
+            peopleFactory = new PeopleFactory(queryFactory);
 
-            
+
+
             InitializeComponent();
 
             SetDictionaries();
@@ -324,6 +314,9 @@ namespace EMS2
         /// <param name="date"></param>
         private void GetSlots(DateTime date)
         {
+            
+            
+
             appointments = appointmentFactory.FindWithTimes(date.Year, date.Month, date.Day);
 
             timeSlotFactory.slots = timeSlotFactory.GetAppSlots(appointments, date);
@@ -391,6 +384,7 @@ namespace EMS2
 
         private void ScheduleRecall(TimeSlot timeSlot)
         {
+            
             if (timeSlot.available == true)
             {
                 DateTime date = timeSlot.date;
@@ -426,20 +420,23 @@ namespace EMS2
 
         private void SlotSelected(TimeSlot timeSlot)
         {
+            
+            AppointmentPatientFactory appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
+
+            Appointment selectedAppointment = new Appointment(appointmentPatientFactory);
+
             if (timeSlot.available == true)
             {
-                selectedSlot = timeSlot;
 
-                FindPatientWindow findPatientWindow = new FindPatientWindow(selectedSlot);
+                FindPatientWindow findPatientWindow = new FindPatientWindow(timeSlot);
                 findPatientWindow.ShowDialog();
             }
             if (timeSlot.available == false)
             {
-                selectedSlot = timeSlot;
 
                 foreach (Appointment app in appointments)
                 {
-                    if (selectedSlot.slotID == app.Timeslot)
+                    if (timeSlot.slotID == app.Timeslot)
                     {
                         selectedAppointment = app;
                     }
@@ -464,13 +461,15 @@ namespace EMS2
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Search_TextChanged(object sender, EventArgs e)
+        private void HCN_TextChanged(object sender, EventArgs e)
         {
-            found = peopleFactory.Find(null, null, null, patientSearchTB.Text);
+            HouseholdFactory householdFactory = new HouseholdFactory(queryFactory);
+
+            List<Person> found = peopleFactory.Find(null, null, null, healthCardTextBox.Text);
             if (found.Count == 1)
             {
                 patientMessage.Text = "Patient Found. Change the feilds below to update their information.";
-                foundPerson = found[0];
+                Person foundPerson = found[0];
 
                 healthCardTextBox.Text = foundPerson.HCN;
                 lNameTextBox.Text = foundPerson.lastName;
@@ -512,7 +511,7 @@ namespace EMS2
             {
                 patientMessage.Text = "No Patient Found. Please enter the required feilds below.";
 
-                healthCardTextBox.Text = patientSearchTB.Text;
+                healthCardTextBox.Text = healthCardTextBox.Text;
 
                 ClearPatientInfo(true);
 
@@ -549,5 +548,7 @@ namespace EMS2
             appSlots.DataSource = null;
             appSlots.DataSource = timeSlotFactory.slots;
         }
+
+
     }
 }
