@@ -439,6 +439,7 @@
             // patientMessage
             // 
             this.patientMessage.AutoSize = true;
+            this.patientMessage.ForeColor = System.Drawing.Color.Red;
             this.patientMessage.Location = new System.Drawing.Point(7, 33);
             this.patientMessage.Name = "patientMessage";
             this.patientMessage.Size = new System.Drawing.Size(0, 13);
