@@ -1,6 +1,6 @@
 ﻿namespace EMS2
 {
-    partial class appointmentBilling
+    partial class AppointmentBilling
     {
         /// <summary>
         /// Required designer variable.

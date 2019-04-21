@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace EMS2
 {
-    public partial class appointmentBilling : Form
+    public partial class AppointmentBilling : Form
     {
         // Factories being used in the UI
         private static QueryFactory queryFactory = new QueryFactory();
@@ -39,7 +39,7 @@ namespace EMS2
         /// <summary>
         /// Constructor for form
         /// </summary>
-        public appointmentBilling(Appointment app)
+        public AppointmentBilling(Appointment app)
         {
             appointment = app;
 
