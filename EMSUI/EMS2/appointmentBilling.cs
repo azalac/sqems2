@@ -16,18 +16,18 @@ namespace EMS2
     public partial class AppointmentBilling : Form
     {
         // Factories being used in the UI
-        private static QueryFactory queryFactory = new QueryFactory();
-        private BillableProcedureFactory billableProcedureFactory = new BillableProcedureFactory(queryFactory);
-        private BillingCodeFactory billingCodeFactory = new BillingCodeFactory(queryFactory);
-        private static PeopleFactory peopleFactory = new PeopleFactory(queryFactory);
-        private static AppointmentFactory appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
-        private AppointmentPatientFactory appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
+        private QueryFactory queryFactory = new QueryFactory();
+        private BillableProcedureFactory billableProcedureFactory;
+        private BillingCodeFactory billingCodeFactory;
+        private PeopleFactory peopleFactory;
+        private AppointmentFactory appointmentFactory;
+        private AppointmentPatientFactory appointmentPatientFactory;
 
         // Appointment selected from the main form
         private Appointment appointment;
-        
-       
-        private AppointmentPatient appointmentPatient = new AppointmentPatient(appointmentFactory, peopleFactory);
+
+
+        private AppointmentPatient appointmentPatient;
         private List<BillableProcedure> billableProcedures = new List<BillableProcedure>();
         private List<BillingCode> billingCodes = new List<BillingCode>();
 
@@ -41,9 +41,17 @@ namespace EMS2
         /// </summary>
         public AppointmentBilling(Appointment app)
         {
+            billableProcedureFactory = new BillableProcedureFactory(queryFactory);
+            billingCodeFactory = new BillingCodeFactory(queryFactory);
+            peopleFactory = new PeopleFactory(queryFactory);
+            appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
+            appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
+
             appointment = app;
 
             InitializeComponent();
+
+            recallCB.SelectedIndex = 0;
 
             appointmentInfo.Text = appointment.Display();
 
@@ -70,13 +78,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void Finish_Click(object sender, EventArgs e)
         {
-            billableProcedureFactory.SetBillableProcedures(appointmentPatient, billingCodes);
-
-            this.recallWeeks = recallCB.SelectedIndex;
-
-            this.appointmentDate = new DateTime(appointment.Year, appointment.Month, appointment.Day);
-
-            this.Close();
+            Finish();
         }
 
 
@@ -90,15 +92,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void Add_Click(object sender, EventArgs e)
         {
-            BillingCode code = billingCodeFactory.Find(billingCodeTB.Text);
-            if (code != null)
-            {
-                billingCodes.Add(code);
-
-                UpdateList();
-            }
-
-
+            Add();
         }
 
 
@@ -112,12 +106,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void Remove_Click(object sender, EventArgs e)
         {
-            if (billingCodeBox.SelectedIndex >= 0)
-            {
-                billingCodes.RemoveAt(billingCodeBox.SelectedIndex);
-
-                UpdateList();
-            }
+            Remove();
         }
 
 
@@ -149,6 +138,66 @@ namespace EMS2
             billingCodeBox.DataSource = null;
             billingCodeBox.DataSource = billingCodes;
             billingCodeBox.DisplayMember = "Display";
+        }
+
+
+
+        private void Add()
+        {
+            BillingCode code = billingCodeFactory.Find(billingCodeTB.Text);
+            if (code != null)
+            {
+                billingCodes.Add(code);
+
+                UpdateList();
+            }
+        }
+
+
+
+        private void Remove()
+        {
+            if (billingCodeBox.SelectedIndex >= 0)
+            {
+                billingCodes.RemoveAt(billingCodeBox.SelectedIndex);
+
+                UpdateList();
+            }
+        }
+
+
+
+        private void Finish()
+        {
+            billableProcedureFactory.SetBillableProcedures(appointmentPatient, billingCodes);
+
+            this.recallWeeks = recallCB.SelectedIndex;
+
+            this.appointmentDate = new DateTime(appointment.Year, appointment.Month, appointment.Day);
+
+            this.Close();
+        }
+
+
+
+
+        private void Key_Pressed(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                if (sender is TextBox)
+                {
+                    Add();
+                }
+                else if(sender is ComboBox)
+                {
+                    Finish();
+                }
+            }
+            else if (sender is ListBox && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete))
+            {
+                Remove();
+            }
         }
     }
 }
