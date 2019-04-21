@@ -58,6 +58,18 @@ namespace EMSDatabase
             return FindMany("SELECT * FROM BillingInfo WHERE AppointmentPatientID = @0", person.ID);
         }
 
+
+        /// <summary>
+        /// Gets all billable procedures for an appointment patient.
+        /// </summary>
+        /// <param name="person">The appointment patient</param>
+        /// <returns>The list of billableprocedures</returns>
+        public List<BillableProcedure> GetBillableProcedures(Appointment appointment)
+        {
+            return FindMany("SELECT * FROM BillingInfo WHERE AppointmentPatientID = (select ID from AppointmentPatient where appointmentID = @0 and iscaregiver = 0)", appointment.ID);
+        }
+
+
         /// <summary>
         /// Sets the billable procedures for an appointment patient
         /// </summary>
