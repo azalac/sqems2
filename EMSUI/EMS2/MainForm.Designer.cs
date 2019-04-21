@@ -62,15 +62,13 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.HCNLabel = new System.Windows.Forms.Label();
             this.healthCardTextBox = new System.Windows.Forms.TextBox();
-            this.patientSearchTB = new System.Windows.Forms.TextBox();
             this.patientMessage = new System.Windows.Forms.Label();
             this.label = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.billingOutput = new System.Windows.Forms.RichTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.billingOutput = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.calendarOutput = new System.Windows.Forms.Label();
             this.tabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -79,10 +77,10 @@
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(313, 238);
+            this.updateButton.Location = new System.Drawing.Point(170, 216);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(100, 23);
-            this.updateButton.TabIndex = 12;
+            this.updateButton.TabIndex = 13;
             this.updateButton.Text = "Update";
             this.updateButton.UseVisualStyleBackColor = true;
             this.updateButton.Visible = false;
@@ -90,10 +88,10 @@
             // 
             // addPatientButton
             // 
-            this.addPatientButton.Location = new System.Drawing.Point(332, 238);
+            this.addPatientButton.Location = new System.Drawing.Point(170, 216);
             this.addPatientButton.Name = "addPatientButton";
             this.addPatientButton.Size = new System.Drawing.Size(100, 23);
-            this.addPatientButton.TabIndex = 12;
+            this.addPatientButton.TabIndex = 13;
             this.addPatientButton.Text = "Add";
             this.addPatientButton.UseVisualStyleBackColor = true;
             this.addPatientButton.Click += new System.EventHandler(this.AddPatientButton_Click);
@@ -119,7 +117,7 @@
             this.provinceComboBox.Location = new System.Drawing.Point(313, 156);
             this.provinceComboBox.Name = "provinceComboBox";
             this.provinceComboBox.Size = new System.Drawing.Size(119, 21);
-            this.provinceComboBox.TabIndex = 10;
+            this.provinceComboBox.TabIndex = 11;
             // 
             // sexComboBox
             // 
@@ -134,7 +132,7 @@
             this.sexComboBox.Location = new System.Drawing.Point(83, 182);
             this.sexComboBox.Name = "sexComboBox";
             this.sexComboBox.Size = new System.Drawing.Size(55, 21);
-            this.sexComboBox.TabIndex = 5;
+            this.sexComboBox.TabIndex = 6;
             this.sexComboBox.SelectedIndexChanged += new System.EventHandler(this.SexCBIndexChanged);
             // 
             // dateOfBirthDTP
@@ -142,7 +140,7 @@
             this.dateOfBirthDTP.Location = new System.Drawing.Point(83, 157);
             this.dateOfBirthDTP.Name = "dateOfBirthDTP";
             this.dateOfBirthDTP.Size = new System.Drawing.Size(119, 20);
-            this.dateOfBirthDTP.TabIndex = 4;
+            this.dateOfBirthDTP.TabIndex = 5;
             // 
             // phoneLabel
             // 
@@ -194,7 +192,7 @@
             this.phoneNumberTextBox.Location = new System.Drawing.Point(313, 183);
             this.phoneNumberTextBox.Name = "phoneNumberTextBox";
             this.phoneNumberTextBox.Size = new System.Drawing.Size(119, 20);
-            this.phoneNumberTextBox.TabIndex = 11;
+            this.phoneNumberTextBox.TabIndex = 12;
             this.phoneNumberTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // cityTextBox
@@ -202,7 +200,7 @@
             this.cityTextBox.Location = new System.Drawing.Point(313, 131);
             this.cityTextBox.Name = "cityTextBox";
             this.cityTextBox.Size = new System.Drawing.Size(119, 20);
-            this.cityTextBox.TabIndex = 9;
+            this.cityTextBox.TabIndex = 10;
             this.cityTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // address2TextBox
@@ -210,7 +208,7 @@
             this.address2TextBox.Location = new System.Drawing.Point(313, 105);
             this.address2TextBox.Name = "address2TextBox";
             this.address2TextBox.Size = new System.Drawing.Size(119, 20);
-            this.address2TextBox.TabIndex = 8;
+            this.address2TextBox.TabIndex = 9;
             this.address2TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // address1TextBox
@@ -218,7 +216,7 @@
             this.address1TextBox.Location = new System.Drawing.Point(313, 79);
             this.address1TextBox.Name = "address1TextBox";
             this.address1TextBox.Size = new System.Drawing.Size(119, 20);
-            this.address1TextBox.TabIndex = 7;
+            this.address1TextBox.TabIndex = 8;
             this.address1TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // headOfHouseTextBox
@@ -226,7 +224,7 @@
             this.headOfHouseTextBox.Location = new System.Drawing.Point(313, 53);
             this.headOfHouseTextBox.Name = "headOfHouseTextBox";
             this.headOfHouseTextBox.Size = new System.Drawing.Size(119, 20);
-            this.headOfHouseTextBox.TabIndex = 6;
+            this.headOfHouseTextBox.TabIndex = 7;
             this.headOfHouseTextBox.TextChanged += new System.EventHandler(this.HouseHeadText_Changed);
             // 
             // HOHLabel
@@ -288,7 +286,7 @@
             this.mInitialTextBox.Location = new System.Drawing.Point(83, 131);
             this.mInitialTextBox.Name = "mInitialTextBox";
             this.mInitialTextBox.Size = new System.Drawing.Size(119, 20);
-            this.mInitialTextBox.TabIndex = 3;
+            this.mInitialTextBox.TabIndex = 4;
             this.mInitialTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // fNameTextBox
@@ -296,7 +294,7 @@
             this.fNameTextBox.Location = new System.Drawing.Point(83, 105);
             this.fNameTextBox.Name = "fNameTextBox";
             this.fNameTextBox.Size = new System.Drawing.Size(119, 20);
-            this.fNameTextBox.TabIndex = 2;
+            this.fNameTextBox.TabIndex = 3;
             this.fNameTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // lNameTextBox
@@ -304,29 +302,27 @@
             this.lNameTextBox.Location = new System.Drawing.Point(83, 79);
             this.lNameTextBox.Name = "lNameTextBox";
             this.lNameTextBox.Size = new System.Drawing.Size(119, 20);
-            this.lNameTextBox.TabIndex = 1;
-            this.lNameTextBox.TabStop = false;
+            this.lNameTextBox.TabIndex = 2;
             this.lNameTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // generateFileButton
             // 
-            this.generateFileButton.Location = new System.Drawing.Point(126, 7);
+            this.generateFileButton.Location = new System.Drawing.Point(3, 65);
             this.generateFileButton.Name = "generateFileButton";
             this.generateFileButton.Size = new System.Drawing.Size(107, 23);
-            this.generateFileButton.TabIndex = 1;
+            this.generateFileButton.TabIndex = 2;
             this.generateFileButton.Text = "Generate File";
             this.generateFileButton.UseVisualStyleBackColor = true;
             this.generateFileButton.Click += new System.EventHandler(this.GenerateFileButton_Click);
             // 
             // generateSummaryButton
             // 
-            this.generateSummaryButton.Location = new System.Drawing.Point(126, 8);
+            this.generateSummaryButton.Location = new System.Drawing.Point(3, 36);
             this.generateSummaryButton.Name = "generateSummaryButton";
             this.generateSummaryButton.Size = new System.Drawing.Size(107, 23);
-            this.generateSummaryButton.TabIndex = 2;
+            this.generateSummaryButton.TabIndex = 1;
             this.generateSummaryButton.Text = "Generate Summary";
             this.generateSummaryButton.UseVisualStyleBackColor = true;
-            this.generateSummaryButton.Visible = false;
             // 
             // billingDate
             // 
@@ -335,7 +331,7 @@
             this.billingDate.Location = new System.Drawing.Point(3, 10);
             this.billingDate.Name = "billingDate";
             this.billingDate.ShowUpDown = true;
-            this.billingDate.Size = new System.Drawing.Size(117, 20);
+            this.billingDate.Size = new System.Drawing.Size(107, 20);
             this.billingDate.TabIndex = 0;
             // 
             // tabs
@@ -344,32 +340,31 @@
             this.tabs.Controls.Add(this.tabPage2);
             this.tabs.Controls.Add(this.tabPage3);
             this.tabs.Controls.Add(this.tabPage4);
-            this.tabs.Controls.Add(this.tabPage5);
-            this.tabs.Controls.Add(this.tabPage6);
-            this.tabs.Controls.Add(this.tabPage7);
             this.tabs.Location = new System.Drawing.Point(12, 12);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
-            this.tabs.Size = new System.Drawing.Size(496, 293);
-            this.tabs.TabIndex = 13;
+            this.tabs.Size = new System.Drawing.Size(449, 271);
+            this.tabs.TabIndex = 0;
             this.tabs.TabStop = false;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.calendarOutput);
+            this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.appSlots);
             this.tabPage1.Controls.Add(this.calendar);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(488, 267);
+            this.tabPage1.Size = new System.Drawing.Size(441, 245);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "Calendar";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // appSlots
             // 
             this.appSlots.FormattingEnabled = true;
-            this.appSlots.Location = new System.Drawing.Point(252, 12);
+            this.appSlots.Location = new System.Drawing.Point(257, 40);
             this.appSlots.Name = "appSlots";
             this.appSlots.Size = new System.Drawing.Size(157, 160);
             this.appSlots.TabIndex = 1;
@@ -378,7 +373,7 @@
             // 
             // calendar
             // 
-            this.calendar.Location = new System.Drawing.Point(12, 12);
+            this.calendar.Location = new System.Drawing.Point(18, 38);
             this.calendar.MaxSelectionCount = 1;
             this.calendar.Name = "calendar";
             this.calendar.TabIndex = 0;
@@ -390,7 +385,6 @@
             // 
             this.tabPage2.Controls.Add(this.HCNLabel);
             this.tabPage2.Controls.Add(this.healthCardTextBox);
-            this.tabPage2.Controls.Add(this.patientSearchTB);
             this.tabPage2.Controls.Add(this.patientMessage);
             this.tabPage2.Controls.Add(this.label);
             this.tabPage2.Controls.Add(this.updateButton);
@@ -420,9 +414,9 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(488, 267);
+            this.tabPage2.Size = new System.Drawing.Size(441, 245);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "Patient";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // HCNLabel
@@ -439,16 +433,8 @@
             this.healthCardTextBox.Location = new System.Drawing.Point(83, 53);
             this.healthCardTextBox.Name = "healthCardTextBox";
             this.healthCardTextBox.Size = new System.Drawing.Size(119, 20);
-            this.healthCardTextBox.TabIndex = 37;
-            this.healthCardTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
-            // 
-            // patientSearchTB
-            // 
-            this.patientSearchTB.Location = new System.Drawing.Point(150, 6);
-            this.patientSearchTB.Name = "patientSearchTB";
-            this.patientSearchTB.Size = new System.Drawing.Size(119, 20);
-            this.patientSearchTB.TabIndex = 36;
-            this.patientSearchTB.TextChanged += new System.EventHandler(this.Search_TextChanged);
+            this.healthCardTextBox.TabIndex = 1;
+            this.healthCardTextBox.TextChanged += new System.EventHandler(this.HCN_TextChanged);
             // 
             // patientMessage
             // 
@@ -475,65 +461,60 @@
             this.tabPage3.Controls.Add(this.generateSummaryButton);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(488, 267);
+            this.tabPage3.Size = new System.Drawing.Size(441, 245);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.Text = "Billing";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // billingOutput
-            // 
-            this.billingOutput.Location = new System.Drawing.Point(3, 36);
-            this.billingOutput.Name = "billingOutput";
-            this.billingOutput.Size = new System.Drawing.Size(357, 210);
-            this.billingOutput.TabIndex = 3;
-            this.billingOutput.Text = "";
             // 
             // tabPage4
             // 
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(488, 267);
+            this.tabPage4.Size = new System.Drawing.Size(441, 245);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // tabPage5
+            // billingOutput
             // 
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(488, 267);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "tabPage5";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            this.billingOutput.Location = new System.Drawing.Point(116, 10);
+            this.billingOutput.Name = "billingOutput";
+            this.billingOutput.ReadOnly = true;
+            this.billingOutput.Size = new System.Drawing.Size(312, 223);
+            this.billingOutput.TabIndex = 3;
+            this.billingOutput.TabStop = false;
+            this.billingOutput.Text = "";
             // 
-            // tabPage6
+            // label1
             // 
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(488, 267);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "tabPage6";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 209);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(333, 39);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Arrow key to select date, W and S to select app slot. \r\nHold Ctrl and use arrow k" +
+    "eys for qick navigation of months and years.\r\n\r\n";
             // 
-            // tabPage7
+            // calendarOutput
             // 
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(488, 267);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "tabPage7";
-            this.tabPage7.UseVisualStyleBackColor = true;
+            this.calendarOutput.AutoSize = true;
+            this.calendarOutput.Location = new System.Drawing.Point(15, 16);
+            this.calendarOutput.Name = "calendarOutput";
+            this.calendarOutput.Size = new System.Drawing.Size(35, 13);
+            this.calendarOutput.TabIndex = 3;
+            this.calendarOutput.Text = "label2";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 359);
+            this.ClientSize = new System.Drawing.Size(538, 331);
             this.Controls.Add(this.tabs);
             this.Name = "MainForm";
             this.Text = "EMS2";
             this.tabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -575,16 +556,14 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.TabPage tabPage6;
-        private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.ListBox appSlots;
-        private System.Windows.Forms.RichTextBox billingOutput;
         private System.Windows.Forms.Label label;
         private System.Windows.Forms.Label patientMessage;
-        private System.Windows.Forms.TextBox patientSearchTB;
-        private System.Windows.Forms.Label HCNLabel;
         private System.Windows.Forms.TextBox healthCardTextBox;
+        private System.Windows.Forms.Label HCNLabel;
+        private System.Windows.Forms.Label calendarOutput;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.RichTextBox billingOutput;
     }
 }
 
