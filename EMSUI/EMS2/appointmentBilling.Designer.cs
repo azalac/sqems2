@@ -63,14 +63,15 @@
             this.billingCodeBox.Location = new System.Drawing.Point(15, 180);
             this.billingCodeBox.Name = "billingCodeBox";
             this.billingCodeBox.Size = new System.Drawing.Size(188, 121);
-            this.billingCodeBox.TabIndex = 2;
+            this.billingCodeBox.TabIndex = 3;
+            this.billingCodeBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Key_Pressed);
             // 
             // addBillingCode
             // 
             this.addBillingCode.Location = new System.Drawing.Point(128, 151);
             this.addBillingCode.Name = "addBillingCode";
             this.addBillingCode.Size = new System.Drawing.Size(75, 23);
-            this.addBillingCode.TabIndex = 3;
+            this.addBillingCode.TabIndex = 1;
             this.addBillingCode.Text = "Add";
             this.addBillingCode.UseVisualStyleBackColor = true;
             this.addBillingCode.Click += new System.EventHandler(this.Add_Click);
@@ -90,7 +91,7 @@
             this.billingFinish.Location = new System.Drawing.Point(132, 349);
             this.billingFinish.Name = "billingFinish";
             this.billingFinish.Size = new System.Drawing.Size(75, 23);
-            this.billingFinish.TabIndex = 5;
+            this.billingFinish.TabIndex = 6;
             this.billingFinish.Text = "Finish";
             this.billingFinish.UseVisualStyleBackColor = true;
             this.billingFinish.Click += new System.EventHandler(this.Finish_Click);
@@ -100,7 +101,8 @@
             this.billingCodeTB.Location = new System.Drawing.Point(15, 153);
             this.billingCodeTB.Name = "billingCodeTB";
             this.billingCodeTB.Size = new System.Drawing.Size(100, 20);
-            this.billingCodeTB.TabIndex = 6;
+            this.billingCodeTB.TabIndex = 0;
+            this.billingCodeTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Key_Pressed);
             // 
             // label2
             // 
@@ -131,9 +133,10 @@
             this.recallCB.Location = new System.Drawing.Point(57, 351);
             this.recallCB.Name = "recallCB";
             this.recallCB.Size = new System.Drawing.Size(69, 21);
-            this.recallCB.TabIndex = 9;
+            this.recallCB.TabIndex = 5;
+            this.recallCB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Key_Pressed);
             // 
-            // appointmentBilling
+            // AppointmentBilling
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -148,7 +151,7 @@
             this.Controls.Add(this.billingCodeBox);
             this.Controls.Add(this.appointmentInfo);
             this.Controls.Add(this.label1);
-            this.Name = "appointmentBilling";
+            this.Name = "AppointmentBilling";
             this.Text = "appointmentBilling";
             this.ResumeLayout(false);
             this.PerformLayout();
