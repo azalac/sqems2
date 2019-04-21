@@ -19,15 +19,22 @@ namespace EMS2
         private AppointmentFactory appointmentFactory;
         private HouseholdFactory householdFactory;
         private AppointmentPatientFactory appointmentPatientFactory;
+        private GenderFactory genderFactory;
+        private BillableProcedureFactory billableProcedureFactory;
 
+        private Billing billing = new Billing();
+        private UI ui = new UI();
+        private Demographics demographics = new Demographics();
+        private TimeSlotFactory timeSlotFactory = new TimeSlotFactory();
 
         private Dictionary<TextBox, Label> textLabels;
+        private Dictionary<ComboBox, Label> comboBoxLabels;
         private Dictionary<TextBox, Label> headTextLabels;
         private Dictionary<TextBox, Label> personTextLabels;
 
 
         private List<Appointment> appointments;
-        private List<TimeSlot> slots;
+        
         private List<Person> found = new List<Person>();
 
 
@@ -50,16 +57,19 @@ namespace EMS2
             appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
             householdFactory = new HouseholdFactory(queryFactory);
             appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
+            genderFactory = new GenderFactory(queryFactory);
+            billableProcedureFactory = new BillableProcedureFactory(queryFactory);
 
+            
             InitializeComponent();
 
             SetDictionaries();
 
             provinceComboBox.SelectedItem = "ON";
 
-            GetSlots(monthCalendar1.SelectionStart);
+            GetSlots(calendar.SelectionStart);
 
-            monthCalendar1.Focus();
+            calendar.Focus();
         }
 
 
@@ -84,8 +94,15 @@ namespace EMS2
                 {headOfHouseTextBox, HOHLabel }
             };
 
+            comboBoxLabels = new Dictionary<ComboBox, Label>()
+            {
+                {sexComboBox, sexLabel },
+                {provinceComboBox, provinceLabel }
+            };
+
             headTextLabels = new Dictionary<TextBox, Label>()
             {
+                {headOfHouseTextBox, HOHLabel },
                 {address1TextBox, add1Label },
                 {cityTextBox, cityLabel },
                 {phoneNumberTextBox, phoneLabel }
@@ -110,15 +127,7 @@ namespace EMS2
         /// <param name="update"></param>
         private void ClearPatientInfo(bool update)
         {
-            foreach (KeyValuePair<TextBox, Label> textLabel in textLabels)
-            {
-                if (update == true && textLabel.Key != healthCardTextBox)
-                {
-                    textLabel.Key.Text = "";
-                    textLabel.Value.ForeColor = black;
-                }
-            }
-            sexLabel.ForeColor = black;
+            ui.ClearPatientInfo(textLabels, comboBoxLabels);
 
             provinceComboBox.SelectedIndex = 8;
             sexComboBox.SelectedIndex = -1;
@@ -135,41 +144,21 @@ namespace EMS2
         /// </summary>
         /// <param name="update"></param>
         /// <returns></returns>
-        private bool CheckNullPatientInfo(bool update = false)
+        private int CheckNullPatientInfo(bool update = false)
         {
             int error = 0;
-            bool ret = false;
 
-            foreach (KeyValuePair<TextBox, Label> textLabel in personTextLabels)
-            {
-                error += CheckNull(textLabel.Key, textLabel.Value);
-            }
+            error = ui.CheckNullInfo(personTextLabels, headTextLabels, update);
+
+            sexLabel.ForeColor = black;
 
             if (sexComboBox.SelectedIndex == -1)
             {
                 sexLabel.ForeColor = red;
                 error++;
             }
-            else
-            {
-                sexLabel.ForeColor = black;
-            }
 
-
-            if (headOfHouseTextBox.Text == "" || update == true)
-            {
-                foreach (KeyValuePair<TextBox, Label> textLabel in headTextLabels)
-                {
-                    error += CheckNull(textLabel.Key, textLabel.Value);
-                }
-            }
-
-            if(error != 0)
-            {
-                ret= true;
-            }
-
-            return ret;
+            return error;
         }
 
 
@@ -178,28 +167,10 @@ namespace EMS2
 
         private void HouseHeadText_Changed(object sender, EventArgs e)
         {
-            if (headOfHouseTextBox.Text != "")
-            {
-                foreach (KeyValuePair<TextBox, Label> textLabel in headTextLabels)
-                {
-                    textLabel.Key.Enabled = false;
-                    textLabel.Value.ForeColor = black;
-                }
+            bool enable = ui.HouseHeadText_Changed(headOfHouseTextBox, headTextLabels);
 
-                provinceComboBox.Enabled = false;
-                address2TextBox.Enabled = false;
-            }
-            else
-            {
-                foreach (KeyValuePair<TextBox, Label> textLabel in headTextLabels)
-                {
-                    textLabel.Key.Enabled = true;
-                    CheckNull(textLabel.Key, textLabel.Value);
-                }
-
-                provinceComboBox.Enabled = true;
-                address2TextBox.Enabled = true;
-            }
+            provinceComboBox.Enabled = enable;
+            address2TextBox.Enabled = enable;
         }
 
 
@@ -216,7 +187,7 @@ namespace EMS2
         {
             TextBox senderObj = sender as TextBox;
             
-            CheckNull(senderObj, textLabels[senderObj]);
+            ui.CheckNull(senderObj, textLabels[senderObj]);
             
         }
 
@@ -238,40 +209,18 @@ namespace EMS2
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tb"></param>
-        /// <param name="label"></param>
-        /// <returns></returns>
-        private int CheckNull(TextBox tb, Label label)
-        {
-            if (tb.Text == "")
-            {
-                label.ForeColor = red;
-                return 1;
-            }
-            else
-            {
-                label.ForeColor = black;
-                return 0;
-            }
-        }
 
 
 
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
         private void GenerateFileButton_Click(object sender, EventArgs e)
         {
-            
+            billingOutput.Text = billing.GenerateSummary(billingDate.Value);
         }
+
 
 
 
@@ -284,7 +233,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            if (CheckNullPatientInfo(true) == false)
+            if (CheckNullPatientInfo(true) == 0)
             {
                 patientMessage.Text = "Updated";
             }
@@ -306,44 +255,29 @@ namespace EMS2
         private void AddPatientButton_Click(object sender, EventArgs e)
         {
             // If validated
-            if (CheckNullPatientInfo() == false)
+            if (CheckNullPatientInfo() == 0)
             {
-                int? houseID = null;
-
-                Person createdPerson = new Person(queryFactory);
-                Household household = new Household(queryFactory);
-
-                // If the patient is not the head of the house then find the houseID with the given HOH HCN
-                if (headOfHouseTextBox.Text != "")
+                int? result = demographics.AddPatient(fNameTextBox.Text,
+                                                   mInitialTextBox.Text[0],
+                                                   lNameTextBox.Text,
+                                                   healthCardTextBox.Text,
+                                                   dateOfBirthDTP.Value,
+                                                   sexComboBox.SelectedIndex + 1,
+                                                   headOfHouseTextBox.Text);
+                if (result != null)
                 {
-                    found = peopleFactory.Find(null, null, null, headOfHouseTextBox.Text);
-                    if (found.Count() > 0)
-                    {
-                        createdPerson = peopleFactory.Create(fNameTextBox.Text, mInitialTextBox.Text[0], lNameTextBox.Text, healthCardTextBox.Text, dateOfBirthDTP.Value, sexComboBox.SelectedIndex + 1, houseID);
-
-                        houseID = found[0].GetHousehold();
-                    }
-                    else
-                    {
-                        patientMessage.Text = "Head of house not found";
-                        HOHLabel.ForeColor = red;
-
-                        return;
-                    }
+                    demographics.CreateHouseHold(result, 
+                                               address1TextBox.Text, 
+                                               address2TextBox.Text, 
+                                               cityTextBox.Text, 
+                                               (string)provinceComboBox.SelectedItem, 
+                                               phoneNumberTextBox.Text);
                 }
-
                 else
                 {
-                    createdPerson = peopleFactory.Create(fNameTextBox.Text, mInitialTextBox.Text[0], lNameTextBox.Text, healthCardTextBox.Text, dateOfBirthDTP.Value, sexComboBox.SelectedIndex + 1, houseID);
-
-                    household = householdFactory.FindOrCreate(address1TextBox.Text, address2TextBox.Text, cityTextBox.Text, (string)provinceComboBox.SelectedItem, phoneNumberTextBox.Text);
-
-                    household.HeadOfHouse = createdPerson.ID;
-
-                    houseID = household.ID;
+                    patientMessage.Text = "Head of house not found";
+                    HOHLabel.ForeColor = red;
                 }
-
-                createdPerson.HouseholdID = houseID;
             }
             else
             {
@@ -362,7 +296,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void DateSelected(object sender, DateRangeEventArgs e)
         {
-            GetSlots(monthCalendar1.SelectionStart);
+            GetSlots(calendar.SelectionStart);
         }
 
 
@@ -376,7 +310,8 @@ namespace EMS2
         /// <param name="e"></param>
         private void AppSlots_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            SlotSelected(slots[appSlots.SelectedIndex]);
+
+            SlotSelected(timeSlotFactory.slots[appSlots.SelectedIndex]);
         }
 
 
@@ -391,9 +326,9 @@ namespace EMS2
         {
             appointments = appointmentFactory.FindWithTimes(date.Year, date.Month, date.Day);
 
-            slots = TimeSlot.ToList(appointments, date);
+            timeSlotFactory.slots = timeSlotFactory.GetAppSlots(appointments, date);
 
-            appSlots.DataSource = slots;
+            UpdateList();
 
         }
 
@@ -437,13 +372,15 @@ namespace EMS2
 
             if (e.KeyCode == Keys.Enter)
             {
-                if (monthCalendar1.BoldedDates.Count() == 0)
+                if (calendar.BoldedDates.Count() == 0)
                 {
-                    SlotSelected(slots[appSlots.SelectedIndex]);
+                    SlotSelected(timeSlotFactory.slots[appSlots.SelectedIndex]);
+
+                    UpdateList();
                 }
                 else
                 {
-                    ScheduleRecall(slots[appSlots.SelectedIndex]);
+                    ScheduleRecall(timeSlotFactory.slots[appSlots.SelectedIndex]);
                 }
             }
         }
@@ -458,7 +395,7 @@ namespace EMS2
             {
                 DateTime date = timeSlot.date;
 
-                if (monthCalendar1.BoldedDates.Contains(date))
+                if (calendar.BoldedDates.Contains(date))
                 {
 
                     string message = string.Format("Do you want to reschedule the appointment for {0}?", date.ToShortDateString());
@@ -469,8 +406,9 @@ namespace EMS2
                     {
                         appointmentFactory.Create(date.Year, date.Month, date.Day, timeSlot.slotID, recallAppointment.PatientID, recallAppointment.CaregiverID);
 
-                        monthCalendar1.RemoveAllBoldedDates();
-                    }                    
+                        calendar.RemoveAllBoldedDates();
+                        calendar.UpdateBoldedDates();
+                    }
                 }
                 else
                 {
@@ -492,8 +430,8 @@ namespace EMS2
             {
                 selectedSlot = timeSlot;
 
-                FindPatientWindow fpw = new FindPatientWindow(selectedSlot);
-                fpw.ShowDialog();
+                FindPatientWindow findPatientWindow = new FindPatientWindow(selectedSlot);
+                findPatientWindow.ShowDialog();
             }
             if (timeSlot.available == false)
             {
@@ -507,13 +445,13 @@ namespace EMS2
                     }
                 }
 
-                appointmentBilling abw = new appointmentBilling(selectedAppointment);
+                AppointmentBilling appointmentBilling = new AppointmentBilling(selectedAppointment);
 
-                abw.ShowDialog();
+                appointmentBilling.ShowDialog();
 
                 recallAppointment = selectedAppointment;
 
-                HighLightRecall(abw.recallWeeks, abw.appointmentDate);
+                HighLightRecall(appointmentBilling.recallWeeks, appointmentBilling.appointmentDate);
             }
         }
 
@@ -602,17 +540,14 @@ namespace EMS2
                     dates[i] = startDate.AddDays(i);
                 }
 
-                monthCalendar1.BoldedDates = dates;
+                calendar.BoldedDates = dates;
             }
         }
 
-
-
-
-
-        private bool IsRecalDate()
+        private void UpdateList()
         {
-            return monthCalendar1.BoldedDates.Contains(monthCalendar1.SelectionStart);
+            appSlots.DataSource = null;
+            appSlots.DataSource = timeSlotFactory.slots;
         }
     }
 }

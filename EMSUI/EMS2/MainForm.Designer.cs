@@ -54,11 +54,11 @@
             this.lNameTextBox = new System.Windows.Forms.TextBox();
             this.generateFileButton = new System.Windows.Forms.Button();
             this.generateSummaryButton = new System.Windows.Forms.Button();
-            this.billingSummaryDate = new System.Windows.Forms.DateTimePicker();
+            this.billingDate = new System.Windows.Forms.DateTimePicker();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.appSlots = new System.Windows.Forms.ListBox();
-            this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
+            this.calendar = new System.Windows.Forms.MonthCalendar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.HCNLabel = new System.Windows.Forms.Label();
             this.healthCardTextBox = new System.Windows.Forms.TextBox();
@@ -66,7 +66,7 @@
             this.patientMessage = new System.Windows.Forms.Label();
             this.label = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.billingOutput = new System.Windows.Forms.RichTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabPage6 = new System.Windows.Forms.TabPage();
@@ -316,7 +316,6 @@
             this.generateFileButton.TabIndex = 1;
             this.generateFileButton.Text = "Generate File";
             this.generateFileButton.UseVisualStyleBackColor = true;
-            this.generateFileButton.Visible = false;
             this.generateFileButton.Click += new System.EventHandler(this.GenerateFileButton_Click);
             // 
             // generateSummaryButton
@@ -329,15 +328,15 @@
             this.generateSummaryButton.UseVisualStyleBackColor = true;
             this.generateSummaryButton.Visible = false;
             // 
-            // billingSummaryDate
+            // billingDate
             // 
-            this.billingSummaryDate.CustomFormat = "MMM yyyy";
-            this.billingSummaryDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.billingSummaryDate.Location = new System.Drawing.Point(3, 10);
-            this.billingSummaryDate.Name = "billingSummaryDate";
-            this.billingSummaryDate.ShowUpDown = true;
-            this.billingSummaryDate.Size = new System.Drawing.Size(117, 20);
-            this.billingSummaryDate.TabIndex = 0;
+            this.billingDate.CustomFormat = "MMM yyyy";
+            this.billingDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.billingDate.Location = new System.Drawing.Point(3, 10);
+            this.billingDate.Name = "billingDate";
+            this.billingDate.ShowUpDown = true;
+            this.billingDate.Size = new System.Drawing.Size(117, 20);
+            this.billingDate.TabIndex = 0;
             // 
             // tabs
             // 
@@ -358,7 +357,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.appSlots);
-            this.tabPage1.Controls.Add(this.monthCalendar1);
+            this.tabPage1.Controls.Add(this.calendar);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -377,15 +376,15 @@
             this.appSlots.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             this.appSlots.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.AppSlots_MouseDoubleClick);
             // 
-            // monthCalendar1
+            // calendar
             // 
-            this.monthCalendar1.Location = new System.Drawing.Point(12, 12);
-            this.monthCalendar1.MaxSelectionCount = 1;
-            this.monthCalendar1.Name = "monthCalendar1";
-            this.monthCalendar1.TabIndex = 0;
-            this.monthCalendar1.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.DateSelected);
-            this.monthCalendar1.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.DateSelected);
-            this.monthCalendar1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
+            this.calendar.Location = new System.Drawing.Point(12, 12);
+            this.calendar.MaxSelectionCount = 1;
+            this.calendar.Name = "calendar";
+            this.calendar.TabIndex = 0;
+            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.DateSelected);
+            this.calendar.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.DateSelected);
+            this.calendar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // tabPage2
             // 
@@ -441,6 +440,7 @@
             this.healthCardTextBox.Name = "healthCardTextBox";
             this.healthCardTextBox.Size = new System.Drawing.Size(119, 20);
             this.healthCardTextBox.TabIndex = 37;
+            this.healthCardTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             // 
             // patientSearchTB
             // 
@@ -469,9 +469,9 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.richTextBox1);
+            this.tabPage3.Controls.Add(this.billingOutput);
             this.tabPage3.Controls.Add(this.generateFileButton);
-            this.tabPage3.Controls.Add(this.billingSummaryDate);
+            this.tabPage3.Controls.Add(this.billingDate);
             this.tabPage3.Controls.Add(this.generateSummaryButton);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -480,13 +480,13 @@
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // richTextBox1
+            // billingOutput
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(73, 63);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(100, 96);
-            this.richTextBox1.TabIndex = 3;
-            this.richTextBox1.Text = "";
+            this.billingOutput.Location = new System.Drawing.Point(3, 36);
+            this.billingOutput.Name = "billingOutput";
+            this.billingOutput.Size = new System.Drawing.Size(357, 210);
+            this.billingOutput.TabIndex = 3;
+            this.billingOutput.Text = "";
             // 
             // tabPage4
             // 
@@ -567,11 +567,11 @@
         private System.Windows.Forms.Button addPatientButton;
         private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.Button generateSummaryButton;
-        private System.Windows.Forms.DateTimePicker billingSummaryDate;
+        private System.Windows.Forms.DateTimePicker billingDate;
         private System.Windows.Forms.Button generateFileButton;
         private System.Windows.Forms.TabControl tabs;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.MonthCalendar monthCalendar1;
+        private System.Windows.Forms.MonthCalendar calendar;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
@@ -579,7 +579,7 @@
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.ListBox appSlots;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox billingOutput;
         private System.Windows.Forms.Label label;
         private System.Windows.Forms.Label patientMessage;
         private System.Windows.Forms.TextBox patientSearchTB;
