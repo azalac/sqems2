@@ -20,14 +20,20 @@ namespace EMS2
         /// 
         /// </summary>
         /// <param name="update"></param>
-        public void ClearPatientInfo(Dictionary<TextBox, Label> textLabels, Dictionary<ComboBox, Label> comboBoxLabels)
+        public void ClearPatientInfo(Dictionary<TextBox, Label> textLabels, Dictionary<ComboBox, Label> comboBoxLabels, bool clearHCN = true)
         {
             clearing = true;
 
+            int i = 0;
+
             foreach (KeyValuePair<TextBox, Label> textLabel in textLabels)
             {
-                textLabel.Key.Text = "";
-                textLabel.Value.ForeColor = black;
+                if (i != 0 || clearHCN == true)
+                {
+                    textLabel.Key.Text = "";
+                    textLabel.Value.ForeColor = black;
+                }
+                i = 1;
             }
 
             foreach (KeyValuePair<ComboBox, Label> comboBoxLabel in comboBoxLabels)
