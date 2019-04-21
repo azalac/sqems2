@@ -145,6 +145,8 @@ namespace EMSDatabase
         public readonly DateTime StartDate;
         public readonly double Price;
 
+        public string display { get => Display(); }
+
         public override string ToString()
         {
             return string.Format("{0}[ID={1}, Start Date={2}, Price=${3}]", Code, ID, StartDate.ToString("d"), Price);
@@ -165,6 +167,11 @@ namespace EMSDatabase
         public override int GetHashCode()
         {
             return ID;
+        }
+
+        public string Display()
+        {
+            return string.Format("Code: {0}, Price=${1}", Code, Price);
         }
     }
     
