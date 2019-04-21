@@ -12,18 +12,32 @@ using System.Threading.Tasks;
 
 namespace EMS2
 {
-    /// <summary>
-    /// This class represents a timeslot
-    /// </summary>
-    public class TimeSlot
+
+    public class TimeSlotFactory
     {
-        public int slotID;
-        public DateTime date;
-        public bool available;
+        public List<TimeSlot> slots = new List<TimeSlot>();
+        public TimeSlot selectedSlot = new TimeSlot();
+
+        private QueryFactory queryFactory = new QueryFactory();
+        private PeopleFactory peopleFactory;
+        private AppointmentFactory appointmentFactory;
+        private HouseholdFactory householdFactory;
+        private AppointmentPatientFactory appointmentPatientFactory;
+        private GenderFactory genderFactory;
+        private BillableProcedureFactory billableProcedureFactory;
 
 
+        public TimeSlotFactory()
+        {
+            peopleFactory = new PeopleFactory(queryFactory);
+            appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
+            householdFactory = new HouseholdFactory(queryFactory);
+            appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
+            genderFactory = new GenderFactory(queryFactory);
+            billableProcedureFactory = new BillableProcedureFactory(queryFactory);
+        }
 
-
+      
 
         /// <summary>
         /// Switches a list of appointments to a list of time slots for a given date
@@ -31,8 +45,11 @@ namespace EMS2
         /// <param name="appointments"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static List<TimeSlot> ToList (List<Appointment> appointments, DateTime date)
+        public List<TimeSlot> GetAppSlots(List<Appointment> appointments, DateTime date)
         {
+            slots = new List<TimeSlot>();
+
+
             int numberOfSlots = 6;
 
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
@@ -40,7 +57,7 @@ namespace EMS2
                 numberOfSlots = 2;
             }
 
-            List<TimeSlot> slots = new List<TimeSlot>();
+
 
             for (int i = 1; i <= numberOfSlots; i++)
             {
@@ -64,6 +81,18 @@ namespace EMS2
 
             return slots;
         }
+
+
+    }
+
+    /// <summary>
+    /// This class represents a timeslot
+    /// </summary>
+    public class TimeSlot
+    {
+        public int slotID;
+        public DateTime date;
+        public bool available;
 
 
 
