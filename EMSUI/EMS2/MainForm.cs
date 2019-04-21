@@ -23,6 +23,7 @@ namespace EMS2
         private UI ui = new UI();
         private Demographics demographics = new Demographics();
         private TimeSlotFactory timeSlotFactory = new TimeSlotFactory();
+        private FileIO fileIO = new FileIO(); 
 
 
         private Dictionary<TextBox, Label> textLabels;
@@ -115,9 +116,9 @@ namespace EMS2
         /// 
         /// </summary>
         /// <param name="update"></param>
-        private void ClearPatientInfo(bool update)
+        private void ClearPatientInfo(bool clearHCN = true)
         {
-            ui.ClearPatientInfo(textLabels, comboBoxLabels);
+            ui.ClearPatientInfo(textLabels, comboBoxLabels, clearHCN);
 
             provinceComboBox.SelectedIndex = 8;
             sexComboBox.SelectedIndex = -1;
@@ -208,7 +209,25 @@ namespace EMS2
 
         private void GenerateFileButton_Click(object sender, EventArgs e)
         {
-            billingOutput.Text = billing.GenerateSummary(billingDate.Value);
+            string output = billing.GenerateSummary(billingDate.Value);
+            billingOutput.Text = output;
+            string message = "File Created";
+            string title = "Created";
+
+            if (output != "")
+            {
+                fileIO.SaveToFile(output, billingDate.Value.ToString("MMMM-yyyy"));
+
+
+                MessageBox.Show(message, title);
+            }
+            else
+            {
+                message = "There were no billable procedures found for the given date";
+                title = "No Billable Procedures";
+
+                MessageBox.Show(message, title);
+            }
         }
 
 
@@ -262,6 +281,12 @@ namespace EMS2
                                                cityTextBox.Text, 
                                                (string)provinceComboBox.SelectedItem, 
                                                phoneNumberTextBox.Text);
+
+                    string message = "Patient Created";
+                    string title = "Created";
+                    MessageBox.Show(message, title);
+
+                    ClearPatientInfo();
                 }
                 else
                 {
@@ -300,8 +325,16 @@ namespace EMS2
         /// <param name="e"></param>
         private void AppSlots_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (calendar.BoldedDates.Count() == 0)
+            {
+                SlotSelected(timeSlotFactory.slots[appSlots.SelectedIndex]);
 
-            SlotSelected(timeSlotFactory.slots[appSlots.SelectedIndex]);
+                UpdateList();
+            }
+            else
+            {
+                ScheduleRecall(timeSlotFactory.slots[appSlots.SelectedIndex]);
+            }
         }
 
 
@@ -391,6 +424,7 @@ namespace EMS2
 
                 if (calendar.BoldedDates.Contains(date))
                 {
+                    calendarOutput.Text = "";
 
                     string message = string.Format("Do you want to reschedule the appointment for {0}?", date.ToShortDateString());
                     string title = "Close Window";
@@ -408,9 +442,7 @@ namespace EMS2
                 }
                 else
                 {
-                    string message = "Please select a bolded date to schedule this appointment for recall";
-                    string title = "Date out of range";
-                    MessageBox.Show(message, title);
+                    calendarOutput.Text = "Please select a bolded date to schedule this appointment for recall";
                 }
             }
         }
@@ -513,9 +545,7 @@ namespace EMS2
             {
                 patientMessage.Text = "No Patient Found. Please enter the required feilds below.";
 
-                healthCardTextBox.Text = healthCardTextBox.Text;
-
-                ClearPatientInfo(true);
+                ClearPatientInfo(false);
 
                 updateButton.Visible = false;
                 addPatientButton.Visible = true;
