@@ -57,6 +57,8 @@
             this.billingDate = new System.Windows.Forms.DateTimePicker();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.calendarOutput = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.appSlots = new System.Windows.Forms.ListBox();
             this.calendar = new System.Windows.Forms.MonthCalendar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -65,10 +67,8 @@
             this.patientMessage = new System.Windows.Forms.Label();
             this.label = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.billingOutput = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.calendarOutput = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -361,6 +361,24 @@
             this.tabPage1.Text = "Calendar";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // calendarOutput
+            // 
+            this.calendarOutput.AutoSize = true;
+            this.calendarOutput.Location = new System.Drawing.Point(15, 16);
+            this.calendarOutput.Name = "calendarOutput";
+            this.calendarOutput.Size = new System.Drawing.Size(0, 13);
+            this.calendarOutput.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 209);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(333, 39);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Arrow key to select date, W and S to select app slot. \r\nHold Ctrl and use arrow k" +
+    "eys for qick navigation of months and years.\r\n\r\n";
+            // 
             // appSlots
             // 
             this.appSlots.FormattingEnabled = true;
@@ -467,15 +485,6 @@
             this.tabPage3.Text = "Billing";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // tabPage4
-            // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(441, 245);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "tabPage4";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
             // billingOutput
             // 
             this.billingOutput.Location = new System.Drawing.Point(116, 10);
@@ -486,24 +495,14 @@
             this.billingOutput.TabStop = false;
             this.billingOutput.Text = "";
             // 
-            // label1
+            // tabPage4
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 209);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(333, 39);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Arrow key to select date, W and S to select app slot. \r\nHold Ctrl and use arrow k" +
-    "eys for qick navigation of months and years.\r\n\r\n";
-            // 
-            // calendarOutput
-            // 
-            this.calendarOutput.AutoSize = true;
-            this.calendarOutput.Location = new System.Drawing.Point(15, 16);
-            this.calendarOutput.Name = "calendarOutput";
-            this.calendarOutput.Size = new System.Drawing.Size(35, 13);
-            this.calendarOutput.TabIndex = 3;
-            this.calendarOutput.Text = "label2";
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(441, 245);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
