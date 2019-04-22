@@ -127,7 +127,8 @@ namespace EMSDatabase
     /// </summary>
     public class Appointment
     {
-        public readonly int ID, Year, Month, Day, Timeslot, PatientID, CaregiverID;
+        public readonly int ID, Year, Month, Day, Timeslot, PatientID;
+        public readonly int? CaregiverID;
         public readonly string PatientHCN, CaregiverHCN, PatientName, CaregiverName;
         
         /// <summary>
