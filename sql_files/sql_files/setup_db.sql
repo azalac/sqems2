@@ -30,6 +30,21 @@ GO
 INSERT INTO Sexes ([Name]) VALUES ('M'), ('F'), ('I'), ('H')
 GO
 
+CREATE TABLE [HCVStatus] (
+	ID INT IDENTITY PRIMARY KEY,
+	CodeName CHAR(5),
+	FullName VARCHAR(256),
+	IsError BIT
+)
+GO
+
+INSERT INTO [HCVStatus] ([CodeName], [FullName], [IsError]) VALUES
+	('NOHCV', 'No previous validation', 0),
+	('VALID', 'Valid', 0),
+	('VCODE', 'Version code mismatch', 1),
+	('PUNKO', 'HCN not found', 1)
+GO
+
 -- Represents a person's contact information
 CREATE TABLE [Household] (
     ID INT IDENTITY NOT NULL PRIMARY KEY,
@@ -121,21 +136,6 @@ INSERT INTO [ProcedureState] ([Code], [FullName], [IsError]) VALUES
 	('DECL', 'Declined', 1),
 	('FHCV', 'Invalid HCN', 1),
 	('CMOH', 'Contact MoH', 1)
-GO
-
-CREATE TABLE [HCVStatus] (
-	ID INT IDENTITY PRIMARY KEY,
-	CodeName CHAR(5),
-	FullName VARCHAR(256),
-	IsError BIT
-)
-GO
-
-INSERT INTO [HCVStatus] ([CodeName], [FullName], [IsError]) VALUES
-	('NOHCV', 'No previous validation', 0),
-	('VALID', 'Valid', 0),
-	('VCODE', 'Version code mismatch', 1),
-	('PUNKO', 'HCN not found', 1)
 GO
 
 -- Represents a billable procedure (appointment can have many)
