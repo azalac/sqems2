@@ -40,6 +40,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.select = new System.Windows.Forms.Button();
             this.cancel = new System.Windows.Forms.Button();
+            this.findOutput = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -58,7 +59,7 @@
             this.patientSearchTB.Size = new System.Drawing.Size(142, 20);
             this.patientSearchTB.TabIndex = 1;
             this.patientSearchTB.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
-            this.patientSearchTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchTextBox_KeyDown);
+            this.patientSearchTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             this.patientSearchTB.Leave += new System.EventHandler(this.FindPerson);
             // 
             // label2
@@ -77,7 +78,7 @@
             this.foundPatients.Name = "foundPatients";
             this.foundPatients.Size = new System.Drawing.Size(522, 95);
             this.foundPatients.TabIndex = 3;
-            this.foundPatients.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
+            this.foundPatients.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // findPatient
             // 
@@ -89,7 +90,7 @@
             this.findPatient.Text = "Find";
             this.findPatient.UseVisualStyleBackColor = true;
             this.findPatient.Click += new System.EventHandler(this.FindPerson);
-            this.findPatient.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
+            this.findPatient.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // findCaregiver
             // 
@@ -101,7 +102,7 @@
             this.findCaregiver.Text = "Find";
             this.findCaregiver.UseVisualStyleBackColor = true;
             this.findCaregiver.Click += new System.EventHandler(this.FindPerson);
-            this.findCaregiver.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
+            this.findCaregiver.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // foundCaregivers
             // 
@@ -110,7 +111,7 @@
             this.foundCaregivers.Name = "foundCaregivers";
             this.foundCaregivers.Size = new System.Drawing.Size(522, 95);
             this.foundCaregivers.TabIndex = 6;
-            this.foundCaregivers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
+            this.foundCaregivers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // label3
             // 
@@ -128,7 +129,7 @@
             this.caregiverSearchTB.Size = new System.Drawing.Size(142, 20);
             this.caregiverSearchTB.TabIndex = 4;
             this.caregiverSearchTB.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
-            this.caregiverSearchTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchTextBox_KeyDown);
+            this.caregiverSearchTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             this.caregiverSearchTB.Leave += new System.EventHandler(this.FindPerson);
             // 
             // label4
@@ -149,7 +150,7 @@
             this.select.Text = "Select";
             this.select.UseVisualStyleBackColor = true;
             this.select.Click += new System.EventHandler(this.Select);
-            this.select.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
+            this.select.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // cancel
             // 
@@ -161,11 +162,21 @@
             this.cancel.UseVisualStyleBackColor = true;
             this.cancel.Click += new System.EventHandler(this.Close_Click);
             // 
+            // findOutput
+            // 
+            this.findOutput.AutoSize = true;
+            this.findOutput.ForeColor = System.Drawing.Color.Red;
+            this.findOutput.Location = new System.Drawing.Point(253, 33);
+            this.findOutput.Name = "findOutput";
+            this.findOutput.Size = new System.Drawing.Size(0, 13);
+            this.findOutput.TabIndex = 12;
+            // 
             // FindPatientWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 370);
+            this.Controls.Add(this.findOutput);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.select);
             this.Controls.Add(this.findCaregiver);
@@ -199,5 +210,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button select;
         private System.Windows.Forms.Button cancel;
+        private System.Windows.Forms.Label findOutput;
     }
 }

@@ -71,8 +71,17 @@ namespace EMS2
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
             if (initalizing == false)
-            {
-                UpdateTextHint(sender as TextBox, tbHint);
+            { 
+                TextBox textBox = sender as TextBox;
+
+                UpdateTextHint(textBox, tbHint);
+
+                Find(textBox);
+
+                if (foundPatients.SelectedValue as Person != null)
+                {
+                    findOutput.Text = "";
+                }
             }
         }
 
@@ -89,9 +98,7 @@ namespace EMS2
         {
             TextBox textBox = sender as TextBox;
 
-            people = peopleFactory.Find(null, textBox.Text);
-
-            pairs[textBox].DataSource = people;
+            Find(textBox);
         }
 
 
@@ -106,11 +113,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void Select(object sender, EventArgs e)
         {
-            DateTime date = timeSlot.date;
-
-            appointmentFactory.Create(date.Year, date.Month, date.Day, timeSlot.slotID, foundPatients.SelectedValue as Person, foundCaregivers.SelectedValue as Person);
-
-            this.Close();
+            Submit();
         }
 
 
@@ -130,29 +133,6 @@ namespace EMS2
         }
 
 
-
-
-
-        /// <summary>
-        /// If the user presses enter when in a text box then find patients
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                TextBox textBox = sender as TextBox;
-
-                people = peopleFactory.Find(null, textBox.Text);
-
-                pairs[textBox].DataSource = people;
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
-        }
 
 
 
@@ -223,12 +203,41 @@ namespace EMS2
             }
         }
 
-        private void Exit(object sender, KeyEventArgs e)
+        private void Control_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Escape)
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (foundPatients.SelectedValue as Person == null)
+                {
+                    findOutput.Text = "No patient is selected";
+                }
+                else
+                {
+                    Submit();
+                }
+            }
+            else if (e.KeyCode == Keys.Escape)
             {
                 this.Close();
             }
+        }
+
+        private void Find(TextBox textBox)
+        {
+            people = peopleFactory.Find(null, textBox.Text);
+
+            pairs[textBox].DataSource = people;
+        }
+
+
+
+        private void Submit()
+        {
+            DateTime date = timeSlot.date;
+
+            appointmentFactory.Create(date.Year, date.Month, date.Day, timeSlot.slotID, foundPatients.SelectedValue as Person, foundCaregivers.SelectedValue as Person);
+
+            this.Close();
         }
     }
 }
