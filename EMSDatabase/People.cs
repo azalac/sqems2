@@ -12,8 +12,11 @@ namespace EMSDatabase
     /// </summary>
     public class PeopleFactory : DatabaseRowFactoryBase<Person>
     {
+        public HCVStatusFactory StatusFactory {get;}
+
         public PeopleFactory(QueryFactory queryFactory) : base(queryFactory)
         {
+            StatusFactory = new HCVStatusFactory(queryFactory);
         }
 
         /// <summary>
@@ -74,7 +77,7 @@ namespace EMSDatabase
 
         protected override Person CreateObject(SqlDataReader reader)
         {
-            return DatabaseRowObjectAdapter.Fill(new Person(queryFactory), reader);
+            return DatabaseRowObjectAdapter.Fill(new Person(queryFactory, StatusFactory), reader);
         }
     }
 
@@ -121,6 +124,33 @@ namespace EMSDatabase
             return reader.GetString(0)[0];
         }
     }
+    
+    public class HCVStatusFactory : DatabaseRowFactoryBase<HCVStatus>
+    {
+        public HCVStatus NotValidated { get => FindByCode("NOHCV"); }
+        public HCVStatus Valid { get => FindByCode("VALID"); }
+        public HCVStatus VersionCode { get => FindByCode("VCODE"); }
+        public HCVStatus Punko { get => FindByCode("PUNKO"); }
+
+        public HCVStatusFactory(QueryFactory queryFactory) : base(queryFactory)
+        {
+        }
+
+        public HCVStatus FindById(int ID)
+        {
+            return Find("SELECT * FROM HCVStatus WHERE ID = @0", ID);
+        }
+
+        public HCVStatus FindByCode(string CodeName)
+        {
+            return Find("SELECT * FROM HCVStatus WHERE CodeName LIKE @0", CodeName);
+        }
+        
+        protected override HCVStatus CreateObject(SqlDataReader reader)
+        {
+            return DatabaseRowObjectAdapter.Fill(new HCVStatus(), reader);
+        }
+    }
 
     /// <summary>
     /// Represents a person in the database
@@ -140,6 +170,8 @@ namespace EMSDatabase
         public int sex => _sex;
 
         public DateTime dateOfBirth => _dateOfBirth;
+
+        public HCVStatus HCVStatus { get => GetHCVStatus(); set => SetHCVStatus(value); }
 
         [SQLColumnBinding("PersonID")]
         public readonly int ID;
@@ -163,10 +195,12 @@ namespace EMSDatabase
         private DateTime _dateOfBirth;
         
         private QueryFactory queryFactory;
+        private HCVStatusFactory statusFactory;
 
-        public Person(QueryFactory query)
+        public Person(QueryFactory query, HCVStatusFactory statusFactory)
         {
             queryFactory = query;
+            this.statusFactory = statusFactory;
         }
 
         public override string ToString()
@@ -197,6 +231,42 @@ namespace EMSDatabase
                 if (cmd.ExecuteNonQuery() != 1)
                 {
                     throw new ArgumentException("Invalid house id " + HouseholdID);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the current HCV status, or 'NotValidated' if none set
+        /// </summary>
+        public HCVStatus GetHCVStatus()
+        {
+            using (SqlCommand cmd = queryFactory.CreateQuery("SELECT HCVStatusID FROM People WHERE PersonID = @0", ID))
+            {
+                int? statusid = cmd.ExecuteScalar() as int?;
+
+                if (statusid == null)
+                {
+                    return statusFactory.NotValidated;
+                }
+                else
+                {
+                    return statusFactory.FindById(statusid.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the hcv's last validation status
+        /// </summary>
+        /// <param name="status">The last validation status</param>
+        /// <exception cref="ArgumentException">If the HCVStatus' ID is invalid (should never happen unless invalid usage)</exception>
+        public void SetHCVStatus(HCVStatus status)
+        {
+            using (SqlCommand cmd = queryFactory.CreateQuery("UPDATE People SET HCVStatusID = @0 WHERE PersonID = @1", status.ID, ID))
+            {
+                if (cmd.ExecuteNonQuery() != 1)
+                {
+                    throw new ArgumentException("Invalid status id " + status.ID);
                 }
             }
         }
@@ -279,7 +349,7 @@ namespace EMSDatabase
         public string mInitial { private get; set; }
         public int sex { private get; set; }
         public DateTime DateOfBirth { private get; set; }
-
+        
         private Person owner;
 
         public EditablePerson(Person owner)
@@ -294,5 +364,20 @@ namespace EMSDatabase
             owner.UpdateValues(HCN, lastName, firstName, mInitial, sex, DateOfBirth);
         }
 
+    }
+
+    /// <summary>
+    /// Represents a health card validation status
+    /// </summary>
+    public class HCVStatus
+    {
+        public readonly int ID;
+
+        public readonly string CodeName, FullName;
+
+        /// <summary>
+        /// True if this code is an error code (ie HCN is invalid)
+        /// </summary>
+        public bool IsError;
     }
 }
