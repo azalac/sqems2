@@ -408,6 +408,7 @@ namespace EMSDatabase
             {
                 Add((colName, colValue));
             }
+            else
             {
                 throw new ArgumentException(string.Format("Column {0} is an invalid value", colName));
             }
@@ -432,7 +433,7 @@ namespace EMSDatabase
         /// <summary>
         /// Gathers the column's values and returns them in an array.
         /// </summary>
-        public object GetValues()
+        public object[] GetValues()
         {
             object[] objs = new object[this.Count];
 
