@@ -368,6 +368,48 @@ namespace EMSDatabase
 
             return (str.ToString(), objs);
         }
+
+        /// <summary>
+        /// Converts this where clause builder to a sql-compatible string.
+        /// </summary>
+        /// <param name="numberingStart">The number to set the first parameter to.</param>
+        /// <returns>The query</returns>
+        public string GetQuery(int numberingStart = 0)
+        {
+            StringBuilder str = new StringBuilder();
+            
+            for (int i = 0; i < this.Count; i++)
+            {
+                (string, object) clause = this[i];
+
+                str.Append("(").Append(string.Format(clause.Item1, "@" + (i + numberingStart))).Append(")");
+
+                if (i < this.Count - 1)
+                {
+                    str.Append(ClauseSeparator);
+                }
+            }
+
+            return str.ToString();
+        }
+
+        /// <summary>
+        /// Gets the values for the current where clause
+        /// </summary>
+        public object[] GetValues()
+        {
+            object[] objs = new object[Count];
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                (string, object) clause = this[i];
+                
+                objs[i] = clause.Item2;
+                
+            }
+
+            return objs;
+        }
         
     }
 
@@ -440,6 +482,89 @@ namespace EMSDatabase
             for(int i = 0; i < Count; i++)
             {
                 objs[i] = this[i].Item2;
+            }
+
+            return objs;
+        }
+
+    }
+
+    public class SqlUpdateBuilder : List<(string, object)>
+    {
+        public string Table { get; set; }
+        public SqlWhereClauseBuilder RowSelector { get; set; }
+
+        /// <summary>
+        /// Tries to add a column, doing nothing if the parameter is invalid
+        /// </summary>
+        /// <param name="colName">The column's name</param>
+        /// <param name="colValue">The column's value</param>
+        /// <param name="illegalValue">The illegal value (null for objects)</param>
+        /// <returns>true if the column was added, false otherwise</returns>
+        public bool TryAddColumn<T>(string colName, T colValue, T illegalValue = default(T))
+        {
+            if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
+            {
+                Add((colName, colValue));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to add a column, failing if the parameter is invalid
+        /// </summary>
+        /// <param name="colName">The column's name</param>
+        /// <param name="colValue">The column's value</param>
+        /// <param name="illegalValue">The illegal value (null for objects)</param>
+        /// <exception cref="ArgumentException">If the column value is invalid</exception>
+        public void AddManditoryColumn<T>(string colName, T colValue, T illegalValue = default(T))
+        {
+            if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
+            {
+                Add((colName, colValue));
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Column {0} is an invalid value", colName));
+            }
+        }
+
+        /// <summary>
+        /// Builds the query and returns it.
+        /// </summary>
+        public string GetQuery()
+        {
+            string sets = "";
+
+            for(int i = 0; i < Count; i++)
+            {
+                sets += string.Format("SET {0} = @{1}{2}",
+                    this[i].Item1, i,
+                    // Only add a comma to the end if there is more columns to update
+                    i < Count - 1 ? ", " : "");
+            }
+
+            return string.Format("UPDATE [{0}] {1} WHERE {2}", Table, sets, RowSelector.GetQuery(Count));
+        }
+
+        /// <summary>
+        /// Gathers the new values & the selector values and returns them in an array.
+        /// </summary>
+        public object[] GetValues()
+        {
+            object[] objs = new object[this.Count + RowSelector.Count];
+
+            // Add the updated values
+            for (int i = 0; i < Count; i++)
+            {
+                objs[i] = this[i].Item2;
+            }
+
+            // Add the selector values
+            for(int i = 0; i < RowSelector.Count;i++)
+            {
+                objs[i + Count] = RowSelector[i].Item2;
             }
 
             return objs;
