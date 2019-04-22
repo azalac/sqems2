@@ -148,6 +148,10 @@ namespace EMS2
 
                 pairs[textBox].DataSource = people;
             }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
         }
 
 
@@ -216,6 +220,14 @@ namespace EMS2
                 }
 
                 checkingHint = false;
+            }
+        }
+
+        private void Exit(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Escape)
+            {
+                this.Close();
             }
         }
     }
