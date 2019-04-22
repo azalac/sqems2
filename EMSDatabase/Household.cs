@@ -102,12 +102,28 @@ namespace EMSDatabase
         /// </summary>
         public int? HeadOfHouse { get => GetHeadOfHouse(); set => SetHeadOfHouse(value); }
 
-        public readonly int ID;
+        public int ID => _ID;
 
-        public readonly string AddressLine1, AddressLine2, City, Province;
+        public string AddressLine1 { get => _AddressLine1; }
+        public string AddressLine2 { get => _AddressLine2; }
+        public string City { get => _City; }
+        public string Province { get => _Province; }
+        public string PhoneNumber { get => _PhoneNumber; }
+
+        [SQLColumnBinding("ID")]
+        private readonly int _ID;
+
+        [SQLColumnBinding("AddressLine1")]
+        private string _AddressLine1;
+        [SQLColumnBinding("AddressLine2")]
+        private string _AddressLine2;
+        [SQLColumnBinding("City")]
+        private string _City;
+        [SQLColumnBinding("Province")]
+        private string _Province;
 
         [SQLColumnBinding("numPhone")]
-        public readonly string PhoneNumber;
+        private string _PhoneNumber;
         
         private QueryFactory queryFactory;
 
@@ -124,7 +140,7 @@ namespace EMSDatabase
         public void SetHeadOfHouse(int? hohId)
         {
             // Delete the previous house head (if there was one)
-            using (SqlCommand deleter = queryFactory.CreateQuery("DELETE FROM HouseHead WHERE HouseID = @0", ID))
+            using (SqlCommand deleter = queryFactory.CreateQuery("DELETE FROM HouseHead WHERE HouseID = @0", _ID))
             {
                 deleter.ExecuteNonQuery();
             }
@@ -132,7 +148,7 @@ namespace EMSDatabase
             if (hohId != null)
             {
                 // Inserts a new house head if it's not being removed
-                using (SqlCommand cmd = queryFactory.CreateQuery("INSERT INTO HouseHead (HouseID, PersonID) VALUES (@0, @1)", ID, hohId))
+                using (SqlCommand cmd = queryFactory.CreateQuery("INSERT INTO HouseHead (HouseID, PersonID) VALUES (@0, @1)", _ID, hohId))
                 {
                     if (cmd.ExecuteNonQuery() == 0)
                     {
@@ -147,10 +163,102 @@ namespace EMSDatabase
         /// </summary>
         public int GetHeadOfHouse()
         {
-            using (SqlCommand cmd = queryFactory.CreateQuery("SELECT PersonID FROM HouseHead WHERE HouseID = @0", ID))
+            using (SqlCommand cmd = queryFactory.CreateQuery("SELECT PersonID FROM HouseHead WHERE HouseID = @0", _ID))
             {
                 return (int)cmd.ExecuteScalar();
             }
         }
+        
+        /// <summary>
+        /// Updates this household's values. Set a parameter to null to ignore it
+        /// </summary>
+        /// <returns>true if the household was successfully updated, false otherwise</returns>
+        public bool UpdateValues(string AddressLine1, string AddressLine2, string City, string Province, string PhoneNumber)
+        {
+            SqlWhereClauseBuilder selector = new SqlWhereClauseBuilder();
+
+            selector.AddManditoryCondition("ID = {0}", _ID, "ID");
+
+            SqlUpdateBuilder updater = new SqlUpdateBuilder()
+            {
+                Table = "Household",
+                RowSelector = selector
+            };
+
+            if(updater.TryAddColumn("AddressLine1", AddressLine1))
+            {
+                this._AddressLine1 = AddressLine1;
+            }
+
+            if(updater.TryAddColumn("AddressLine2", AddressLine2))
+            {
+                this._AddressLine2 = AddressLine2;
+            }
+
+            if(updater.TryAddColumn("City", City))
+            {
+                this._City = City;
+            }
+
+            if(updater.TryAddColumn("Province", Province))
+            {
+                this._Province = Province;
+            }
+
+            if(updater.TryAddColumn("numPhone", PhoneNumber))
+            {
+                this._PhoneNumber = PhoneNumber;
+            }
+
+            using (SqlCommand cmd = queryFactory.CreateQuery(updater.GetQuery(), updater.GetValues()))
+            {
+                return cmd.ExecuteNonQuery() == 1;
+            }
+
+        }
+
+        /// <summary>
+        /// Returns an editable version of this household
+        /// </summary>
+        public EditableHousehold StartEditing()
+        {
+            return new EditableHousehold(this);
+        }
+
     }
+
+    /// <summary>
+    /// An editable version of a household. Changes must be commited after fields
+    /// are updated (should be after all operations). Null fields are not updated.
+    /// DO NOT USE FOR DATA STORAGE. PROPERTIES ARE WRITE ONLY
+    /// </summary>
+    public class EditableHousehold
+    {
+        public readonly int ID;
+
+        public string AddressLine1 { private get; set; }
+        public string AddressLine2 { private get; set; }
+        public string City { private get; set; }
+        public string Province { private get; set; }
+        public string PhoneNumber { private get; set; }
+
+        private readonly Household household;
+
+        public EditableHousehold(Household household)
+        {
+            ID = household.ID;
+
+            this.household = household;
+        }
+        
+        /// <summary>
+        /// Updates this household's values
+        /// </summary>
+        public void CommitChanges()
+        {
+            household.UpdateValues(AddressLine1, AddressLine2, City, Province, PhoneNumber);
+        }
+
+    }
+
 }
