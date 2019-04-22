@@ -31,10 +31,6 @@ namespace EMS2
             appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
             genderFactory = new GenderFactory(queryFactory);
             billableProcedureFactory = new BillableProcedureFactory(queryFactory);
-
-            Person createdPerson = new Person(queryFactory);
-            Household household = new Household(queryFactory);
-
         }
 
 
