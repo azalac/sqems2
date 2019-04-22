@@ -14,7 +14,7 @@ namespace EMSDatabase
     /// <summary>
     /// Controls the sql connection and has proxy methods for creating queries and stored procedure calls.
     /// </summary>
-    public class QueryFactory
+    public class QueryFactory : IDisposable
     {
         private string _connectionStr;
 
@@ -87,6 +87,11 @@ namespace EMSDatabase
         public void Close()
         {
             connection?.Close();
+        }
+
+        public void Dispose()
+        {
+            Close();
         }
     }
 
