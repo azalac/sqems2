@@ -501,7 +501,7 @@ namespace EMS2
             List<Person> found = peopleFactory.Find(null, null, null, healthCardTextBox.Text);
             if (found.Count == 1)
             {
-                patientMessage.Text = "Patient Found. Change the feilds below to update their information.";
+                patientMessage.Text = "Patient Found. Change the fields below to update their information.";
                 Person foundPerson = found[0];
 
                 healthCardTextBox.Text = foundPerson.HCN;
