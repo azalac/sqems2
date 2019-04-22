@@ -365,11 +365,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void Control_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode >= Keys.D1 && e.KeyCode <= Keys.D4)
-            {
-                tabs.SelectedIndex = e.KeyCode - Keys.D1;
-            }
-            if (tabs.TabIndex == 0 && sender.GetType().Name != "TabControl")
+            if (tabs.TabIndex == 0 && sender.GetType().Name == "TabControl")
             {
                 if (e.KeyCode == Keys.S)
                 {
@@ -501,7 +497,7 @@ namespace EMS2
             List<Person> found = peopleFactory.Find(null, null, null, healthCardTextBox.Text);
             if (found.Count == 1)
             {
-                patientMessage.Text = "Patient Found. Change the feilds below to update their information.";
+                patientMessage.Text = "Patient Found. Change the fields below to update their information.";
                 Person foundPerson = found[0];
 
                 healthCardTextBox.Text = foundPerson.HCN;

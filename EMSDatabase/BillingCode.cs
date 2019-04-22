@@ -241,6 +241,15 @@ namespace EMSDatabase
             }
         }
 
+        public int? GetStatusID(string statusName)
+        {
+            using (SqlCommand cmd = queryFactory.CreateQuery("SELECT [ID] FROM [ProcedureState] WHERE [Code] = @0",
+                statusName))
+            {
+                return cmd.ExecuteScalar() as int?;
+            }
+        }
+
         public override string ToString()
         {
             return string.Format("BillableProcedure[For = {0}, Code = {1}/{2}, Price = {3}, Status = {4}/{5}]",
