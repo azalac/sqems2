@@ -72,6 +72,7 @@
             this.addBillingCode.Name = "addBillingCode";
             this.addBillingCode.Size = new System.Drawing.Size(75, 23);
             this.addBillingCode.TabIndex = 1;
+            this.addBillingCode.TabStop = false;
             this.addBillingCode.Text = "Add";
             this.addBillingCode.UseVisualStyleBackColor = true;
             this.addBillingCode.Click += new System.EventHandler(this.Add_Click);
@@ -83,6 +84,7 @@
             this.removeBillingCode.Name = "removeBillingCode";
             this.removeBillingCode.Size = new System.Drawing.Size(75, 23);
             this.removeBillingCode.TabIndex = 4;
+            this.removeBillingCode.TabStop = false;
             this.removeBillingCode.Text = "Remove";
             this.removeBillingCode.UseVisualStyleBackColor = true;
             this.removeBillingCode.Click += new System.EventHandler(this.Remove_Click);
