@@ -132,15 +132,35 @@ namespace EMSDatabase
         /// </summary>
         public int? HouseholdID { get => GetHousehold(); set => SetHousehold(value); }
 
+        public string HCN => _HCN;
+        public string lastName => _lastName;
+        public string firstName => _firstName;
+        public string mInitial => _mInitial;
+
+        public int sex => _sex;
+
+        public DateTime dateOfBirth => _dateOfBirth;
+
         [SQLColumnBinding("PersonID")]
-        public int ID;
+        public readonly int ID;
 
-        public string HCN, lastName, firstName, mInitial;
+        [SQLColumnBinding("HCN")]
+        private string _HCN;
 
-        public int sex;
+        [SQLColumnBinding("lastName")]
+        private string _lastName;
+
+        [SQLColumnBinding("firstName")]
+        private string _firstName;
+
+        [SQLColumnBinding("mInitial")]
+        private string _mInitial;
+
+        [SQLColumnBinding("sex")]
+        private int _sex;
 
         [SQLColumnBinding("dateBirth")]
-        public DateTime dateOfBirth;
+        private DateTime _dateOfBirth;
         
         private QueryFactory queryFactory;
 
@@ -180,5 +200,99 @@ namespace EMSDatabase
                 }
             }
         }
+
+        /// <summary>
+        /// Updates this person's values. Set a parameter to null to ignore it
+        /// </summary>
+        /// <returns>true if the person was successfully updated, false otherwise</returns>
+        public bool UpdateValues(string HCN, string lastName, string firstName, string mInitial, int sex, DateTime dateOfBirth)
+        {
+            SqlWhereClauseBuilder selector = new SqlWhereClauseBuilder();
+
+            selector.AddManditoryCondition("PersonID = {0}", ID, "PersonID");
+
+            SqlUpdateBuilder updater = new SqlUpdateBuilder()
+            {
+                Table = "People",
+                RowSelector = selector
+            };
+
+            if (updater.TryAddColumn("HCN", HCN))
+            {
+                _HCN = HCN;
+            }
+
+            if(updater.TryAddColumn("lastName", lastName))
+            {
+                _lastName = lastName;
+            }
+            
+            if(updater.TryAddColumn("firstName", firstName))
+            {
+                _firstName = firstName;
+            }
+
+            if (updater.TryAddColumn("mInitial", mInitial))
+            {
+                _mInitial = mInitial;
+            }
+
+            if(updater.TryAddColumn("sex", sex))
+            {
+                _sex = sex;
+            }
+
+            if(updater.TryAddColumn("dateOfBirth", dateOfBirth))
+            {
+                _dateOfBirth = dateOfBirth;
+            }
+
+            using (SqlCommand cmd = queryFactory.CreateQuery(updater.GetQuery(), updater.GetValues()))
+            {
+                return cmd.ExecuteNonQuery() == 1;
+            }
+
+        }
+
+        /// <summary>
+        /// Returns an editable version of this person
+        /// </summary>
+        public EditablePerson StartEditing()
+        {
+            return new EditablePerson(this);
+        }
+    }
+
+    /// <summary>
+    /// An editable version of a person. Changes must be commited after fields
+    /// are updated (should be after all operations). Null fields are not updated.
+    /// DO NOT USE FOR DATA STORAGE. PROPERTIES ARE WRITE ONLY
+    /// </summary>
+    public class EditablePerson
+    {
+
+        public readonly int ID;
+
+        public string HCN { private get; set; }
+        public string lastName { private get; set; }
+        public string firstName { private get; set; }
+        public string mInitial { private get; set; }
+        public int sex { private get; set; }
+        public DateTime DateOfBirth { private get; set; }
+
+        private Person owner;
+
+        public EditablePerson(Person owner)
+        {
+            ID = owner.ID;
+
+            this.owner = owner;
+        }
+
+        public void CommitChanges()
+        {
+            owner.UpdateValues(HCN, lastName, firstName, mInitial, sex, DateOfBirth);
+        }
+
     }
 }
