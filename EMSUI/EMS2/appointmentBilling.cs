@@ -145,7 +145,7 @@ namespace EMS2
         private void Add()
         {
             BillingCode code = billingCodeFactory.Find(billingCodeTB.Text);
-            if (code != null)
+            if (code != null && billingCodes.Contains(code) == false)
             {
                 billingCodes.Add(code);
 
