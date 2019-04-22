@@ -183,13 +183,13 @@ namespace EMS2
 
         private void Key_Pressed(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 if (sender is TextBox)
                 {
                     Add();
                 }
-                else if(sender is ComboBox)
+                else if (sender is ComboBox)
                 {
                     Finish();
                 }
@@ -197,6 +197,18 @@ namespace EMS2
             else if (sender is ListBox && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete))
             {
                 Remove();
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+        }
+
+        private void Exit(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
             }
         }
     }

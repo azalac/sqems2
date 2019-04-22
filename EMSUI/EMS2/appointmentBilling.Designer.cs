@@ -75,6 +75,7 @@
             this.addBillingCode.Text = "Add";
             this.addBillingCode.UseVisualStyleBackColor = true;
             this.addBillingCode.Click += new System.EventHandler(this.Add_Click);
+            this.addBillingCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
             // 
             // removeBillingCode
             // 
@@ -85,6 +86,7 @@
             this.removeBillingCode.Text = "Remove";
             this.removeBillingCode.UseVisualStyleBackColor = true;
             this.removeBillingCode.Click += new System.EventHandler(this.Remove_Click);
+            this.removeBillingCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
             // 
             // billingFinish
             // 
@@ -95,6 +97,7 @@
             this.billingFinish.Text = "Finish";
             this.billingFinish.UseVisualStyleBackColor = true;
             this.billingFinish.Click += new System.EventHandler(this.Finish_Click);
+            this.billingFinish.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Exit);
             // 
             // billingCodeTB
             // 
