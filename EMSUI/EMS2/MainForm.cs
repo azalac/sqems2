@@ -365,11 +365,7 @@ namespace EMS2
         /// <param name="e"></param>
         private void Control_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode >= Keys.D1 && e.KeyCode <= Keys.D4)
-            {
-                tabs.SelectedIndex = e.KeyCode - Keys.D1;
-            }
-            if (tabs.TabIndex == 0 && sender.GetType().Name != "TabControl")
+            if (tabs.TabIndex == 0 && sender.GetType().Name == "TabControl")
             {
                 if (e.KeyCode == Keys.S)
                 {
