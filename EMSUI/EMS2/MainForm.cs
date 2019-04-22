@@ -37,8 +37,8 @@ namespace EMS2
 
         private Appointment recallAppointment;
 
-        Color red = Color.Red;
-        Color black = Color.Black;
+        private Color red = Color.Red;
+        private Color black = Color.Black;
 
 
 
@@ -328,13 +328,13 @@ namespace EMS2
             if (calendar.BoldedDates.Count() == 0)
             {
                 SlotSelected(timeSlotFactory.slots[appSlots.SelectedIndex]);
-
-                UpdateList();
             }
             else
             {
                 ScheduleRecall(timeSlotFactory.slots[appSlots.SelectedIndex]);
             }
+
+            GetSlots(calendar.SelectionStart);
         }
 
 
@@ -347,15 +347,11 @@ namespace EMS2
         /// <param name="date"></param>
         private void GetSlots(DateTime date)
         {
-            
-            
-
             appointments = appointmentFactory.FindWithTimes(date.Year, date.Month, date.Day);
 
             timeSlotFactory.slots = timeSlotFactory.GetAppSlots(appointments, date);
 
             UpdateList();
-
         }
 
        
@@ -373,40 +369,43 @@ namespace EMS2
             {
                 tabs.SelectedIndex = e.KeyCode - Keys.D1;
             }
-            if (e.KeyCode == Keys.S)
+            if (tabs.TabIndex == 0 && sender.GetType().Name != "TabControl")
             {
-                try
+                if (e.KeyCode == Keys.S)
                 {
-                    appSlots.SelectedIndex++;
+                    try
+                    {
+                        appSlots.SelectedIndex++;
+                    }
+                    catch
+                    {
+                        appSlots.SelectedIndex = 0;
+                    }
                 }
-                catch
+
+                if (e.KeyCode == Keys.W)
                 {
-                    appSlots.SelectedIndex = 0;
+
+                    appSlots.SelectedIndex--;
+                    if (appSlots.SelectedIndex == -1)
+                    {
+                        appSlots.SelectedIndex = appSlots.Items.Count - 1;
+
+                    }
                 }
-            }
 
-            if (e.KeyCode == Keys.W)
-            {
-
-                appSlots.SelectedIndex--;
-                if( appSlots.SelectedIndex == -1)
+                if (e.KeyCode == Keys.Enter)
                 {
-                    appSlots.SelectedIndex = appSlots.Items.Count - 1;
+                    if (calendar.BoldedDates.Count() == 0)
+                    {
+                        SlotSelected(timeSlotFactory.slots[appSlots.SelectedIndex]);
+                    }
+                    else
+                    {
+                        ScheduleRecall(timeSlotFactory.slots[appSlots.SelectedIndex]);
+                    }
 
-                }
-            }
-
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (calendar.BoldedDates.Count() == 0)
-                {
-                    SlotSelected(timeSlotFactory.slots[appSlots.SelectedIndex]);
-
-                    UpdateList();
-                }
-                else
-                {
-                    ScheduleRecall(timeSlotFactory.slots[appSlots.SelectedIndex]);
+                    GetSlots(calendar.SelectionStart);
                 }
             }
         }
@@ -582,5 +581,9 @@ namespace EMS2
         }
 
 
+        private void tabs_Selected(object sender, TabControlEventArgs e)
+        {
+            ui.ClearPatientInfo(textLabels, comboBoxLabels);
+        }
     }
 }

@@ -85,6 +85,7 @@
             this.updateButton.UseVisualStyleBackColor = true;
             this.updateButton.Visible = false;
             this.updateButton.Click += new System.EventHandler(this.UpdateButton_Click);
+            this.updateButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // addPatientButton
             // 
@@ -118,6 +119,7 @@
             this.provinceComboBox.Name = "provinceComboBox";
             this.provinceComboBox.Size = new System.Drawing.Size(119, 21);
             this.provinceComboBox.TabIndex = 11;
+            this.provinceComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // sexComboBox
             // 
@@ -134,6 +136,7 @@
             this.sexComboBox.Size = new System.Drawing.Size(55, 21);
             this.sexComboBox.TabIndex = 6;
             this.sexComboBox.SelectedIndexChanged += new System.EventHandler(this.SexCBIndexChanged);
+            this.sexComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // dateOfBirthDTP
             // 
@@ -141,6 +144,7 @@
             this.dateOfBirthDTP.Name = "dateOfBirthDTP";
             this.dateOfBirthDTP.Size = new System.Drawing.Size(119, 20);
             this.dateOfBirthDTP.TabIndex = 5;
+            this.dateOfBirthDTP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // phoneLabel
             // 
@@ -194,6 +198,7 @@
             this.phoneNumberTextBox.Size = new System.Drawing.Size(119, 20);
             this.phoneNumberTextBox.TabIndex = 12;
             this.phoneNumberTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.phoneNumberTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // cityTextBox
             // 
@@ -202,6 +207,7 @@
             this.cityTextBox.Size = new System.Drawing.Size(119, 20);
             this.cityTextBox.TabIndex = 10;
             this.cityTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.cityTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // address2TextBox
             // 
@@ -210,6 +216,7 @@
             this.address2TextBox.Size = new System.Drawing.Size(119, 20);
             this.address2TextBox.TabIndex = 9;
             this.address2TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.address2TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // address1TextBox
             // 
@@ -218,6 +225,7 @@
             this.address1TextBox.Size = new System.Drawing.Size(119, 20);
             this.address1TextBox.TabIndex = 8;
             this.address1TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.address1TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // headOfHouseTextBox
             // 
@@ -226,6 +234,7 @@
             this.headOfHouseTextBox.Size = new System.Drawing.Size(119, 20);
             this.headOfHouseTextBox.TabIndex = 7;
             this.headOfHouseTextBox.TextChanged += new System.EventHandler(this.HouseHeadText_Changed);
+            this.headOfHouseTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // HOHLabel
             // 
@@ -288,6 +297,7 @@
             this.mInitialTextBox.Size = new System.Drawing.Size(119, 20);
             this.mInitialTextBox.TabIndex = 4;
             this.mInitialTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.mInitialTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // fNameTextBox
             // 
@@ -296,6 +306,7 @@
             this.fNameTextBox.Size = new System.Drawing.Size(119, 20);
             this.fNameTextBox.TabIndex = 3;
             this.fNameTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.fNameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // lNameTextBox
             // 
@@ -304,6 +315,7 @@
             this.lNameTextBox.Size = new System.Drawing.Size(119, 20);
             this.lNameTextBox.TabIndex = 2;
             this.lNameTextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+            this.lNameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // generateFileButton
             // 
@@ -314,6 +326,7 @@
             this.generateFileButton.Text = "Generate File";
             this.generateFileButton.UseVisualStyleBackColor = true;
             this.generateFileButton.Click += new System.EventHandler(this.GenerateFileButton_Click);
+            this.generateFileButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // generateSummaryButton
             // 
@@ -323,6 +336,7 @@
             this.generateSummaryButton.TabIndex = 1;
             this.generateSummaryButton.Text = "Generate Summary";
             this.generateSummaryButton.UseVisualStyleBackColor = true;
+            this.generateSummaryButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // billingDate
             // 
@@ -333,6 +347,7 @@
             this.billingDate.ShowUpDown = true;
             this.billingDate.Size = new System.Drawing.Size(107, 20);
             this.billingDate.TabIndex = 0;
+            this.billingDate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // tabs
             // 
@@ -346,6 +361,8 @@
             this.tabs.Size = new System.Drawing.Size(449, 271);
             this.tabs.TabIndex = 0;
             this.tabs.TabStop = false;
+            this.tabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabs_Selected);
+            this.tabs.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // tabPage1
             // 
@@ -453,6 +470,7 @@
             this.healthCardTextBox.Size = new System.Drawing.Size(119, 20);
             this.healthCardTextBox.TabIndex = 1;
             this.healthCardTextBox.TextChanged += new System.EventHandler(this.HCN_TextChanged);
+            this.healthCardTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // patientMessage
             // 
@@ -494,6 +512,7 @@
             this.billingOutput.TabIndex = 3;
             this.billingOutput.TabStop = false;
             this.billingOutput.Text = "";
+            this.billingOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // tabPage4
             // 
