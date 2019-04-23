@@ -1,6 +1,0 @@
-C:\Users\mikeh\source\repos\Security\Security\bin\Debug\Security.dll
-C:\Users\mikeh\source\repos\Security\Security\bin\Debug\Security.pdb
-C:\Users\mikeh\source\repos\Security\Security\obj\Debug\Security.csprojAssemblyReference.cache
-C:\Users\mikeh\source\repos\Security\Security\obj\Debug\Security.csproj.CoreCompileInputs.cache
-C:\Users\mikeh\source\repos\Security\Security\obj\Debug\Security.dll
-C:\Users\mikeh\source\repos\Security\Security\obj\Debug\Security.pdb
