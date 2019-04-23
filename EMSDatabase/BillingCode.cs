@@ -216,7 +216,7 @@ namespace EMSDatabase
             using (SqlCommand cmd = queryFactory.CreateQuery("SELECT [Status] FROM [BillableProcedure] WHERE AppointmentPatientID = @0 AND CodeID = @1",
                 AppointmentPatientID, BillingCodeID))
             {
-                _statusID = cmd.ExecuteScalar() as int?;
+                _statusID = Convert.ToInt32(cmd.ExecuteScalar());
             }
 
             if(_statusID == null)
@@ -246,7 +246,7 @@ namespace EMSDatabase
             using (SqlCommand cmd = queryFactory.CreateQuery("SELECT [ID] FROM [ProcedureState] WHERE [Code] = @0",
                 statusName))
             {
-                return cmd.ExecuteScalar() as int?;
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
 
