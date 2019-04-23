@@ -1,4 +1,10 @@
-﻿//Comment
+﻿/// PROJECT: EMS2
+/// FILE: Billing.cs
+/// AUTHOR: Billy Parmenter, Mike Ramoutsakis, Austin Zalac, Mike Hilts
+/// DATE: April 19 - 2019
+/// DESCRIPTION: This form will handle all of the billing functionality in 
+///              the UI.
+
 
 using EMSDatabase;
 using System;
@@ -21,7 +27,7 @@ namespace EMS2
         private List<BillableProcedureStatus> bps = new List<BillableProcedureStatus>() { };
 
         /// <summary>
-        /// 
+        /// This is the default billing constructor
         /// </summary>
         public Billing()
         {
@@ -33,7 +39,8 @@ namespace EMS2
             billableProcedureFactory = new BillableProcedureFactory(queryFactory);
         }
         /// <summary>
-        /// 
+        /// This function will generate the billing file to be displayed 
+        /// to the user.
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
@@ -71,7 +78,7 @@ namespace EMS2
             return billingOutput;
         }
         /// <summary>
-        /// 
+        /// This function will handle a response file from the MOH
         /// </summary>
         /// <param name="readFile"></param>
         public void checkTransDB(List<string> readFile)
@@ -113,7 +120,7 @@ namespace EMS2
 
 
         /// <summary>
-        /// 
+        /// This function will generate the billing summary to be displayed to the user
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
@@ -155,7 +162,8 @@ namespace EMS2
 
 
         /// <summary>
-        /// 
+        /// This funtion will get a list of billable procedures and appointments
+        /// based on the year and the month selected.
         /// </summary>
         /// <param name="year"></param>
         /// <param name="month"></param>
