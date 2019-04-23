@@ -9,7 +9,7 @@ namespace EMS2
 {
     class Demographics
     {
-        private QueryFactory queryFactory = new QueryFactory();
+        private QueryFactory queryFactory;
         private PeopleFactory peopleFactory;
         private AppointmentFactory appointmentFactory;
         private HouseholdFactory householdFactory;
@@ -23,8 +23,9 @@ namespace EMS2
         private int? houseHoldID;
 
 
-        public Demographics()
+        public Demographics(string connStr)
         {
+            queryFactory = new QueryFactory(connStr);
             peopleFactory = new PeopleFactory(queryFactory);
             appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
             householdFactory = new HouseholdFactory(queryFactory);

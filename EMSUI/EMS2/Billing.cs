@@ -11,7 +11,7 @@ namespace EMS2
 {
     class Billing
     {
-        private QueryFactory queryFactory = new QueryFactory();
+        private QueryFactory queryFactory;
         private PeopleFactory peopleFactory;
         private AppointmentFactory appointmentFactory;
         private HouseholdFactory householdFactory;
@@ -19,8 +19,9 @@ namespace EMS2
         private GenderFactory genderFactory;
         private BillableProcedureFactory billableProcedureFactory;
 
-        public Billing()
+        public Billing(string connStr)
         {
+            queryFactory = new QueryFactory(connStr);
             peopleFactory = new PeopleFactory(queryFactory);
             appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
             householdFactory = new HouseholdFactory(queryFactory);
