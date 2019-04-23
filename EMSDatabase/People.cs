@@ -69,10 +69,8 @@ namespace EMSDatabase
             where.TryAddCondition("lastName = {0}", lastName);
             where.TryAddCondition("mInitial = {0}", mInitial);
             where.TryAddCondition("HCN = {0}", HCN);
-
-            var (where_query, where_objs) = where.Get();
-
-            return base.FindMany("SELECT * FROM People WHERE" + where_query, where_objs);
+            
+            return FindMany("SELECT * FROM People WHERE" + where.GetQuery(), where.GetValues());
         }
 
         protected override Person CreateObject(SqlDataReader reader)
@@ -242,7 +240,7 @@ namespace EMSDatabase
         {
             using (SqlCommand cmd = queryFactory.CreateQuery("SELECT HCVStatusID FROM People WHERE PersonID = @0", ID))
             {
-                int? statusid = cmd.ExecuteScalar() as int?;
+                int? statusid = Convert.ToInt32(cmd.ExecuteScalar());
 
                 if (statusid == null)
                 {
