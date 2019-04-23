@@ -69,10 +69,12 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.billingOutput = new System.Windows.Forms.RichTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // updateButton
@@ -393,8 +395,8 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(333, 39);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Arrow key to select date, W and S to select app slot. \r\nHold Ctrl and use arrow k" +
-    "eys for qick navigation of months and years.\r\n\r\n";
+            this.label1.Text = "Use the arrow keys to select date. \r\nHold Ctrl and use arrow keys for qick naviga" +
+    "tion of months and years.\r\n\r\n";
             // 
             // appSlots
             // 
@@ -516,12 +518,23 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.button1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(441, 245);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(4, 4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Select File";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.selectFileButton_Click);
             // 
             // MainForm
             // 
@@ -537,6 +550,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -583,6 +597,7 @@
         private System.Windows.Forms.Label calendarOutput;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox billingOutput;
+        private System.Windows.Forms.Button button1;
     }
 }
 
