@@ -62,10 +62,8 @@ namespace EMSDatabase
             predicate.TryAddCondition("City = {0}", City);
             predicate.TryAddCondition("Province = {0}", Province);
             predicate.TryAddCondition("numPhone = {0}", PhoneNumber);
-
-            var (predicate_str, predicate_obj) = predicate.Get();
             
-            return Find("SELECT * FROM Household WHERE " + predicate_str, predicate_obj);
+            return Find("SELECT * FROM Household WHERE " + predicate.GetQuery(), predicate.GetValues());
         }
 
         /// <summary>

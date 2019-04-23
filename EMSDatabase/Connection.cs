@@ -346,34 +346,7 @@ namespace EMSDatabase
                 throw new ArgumentException(string.Format("{0} is not valid (was '{1}')", argname, value));
             }
         }
-
-        /// <summary>
-        /// Converts this predicate to a sql-compatible string.
-        /// </summary>
-        /// <param name="numberingStart">The number to set the first parameter to.</param>
-        /// <returns>The query</returns>
-        public (string, object[]) Get(int numberingStart = 0)
-        {
-            StringBuilder str = new StringBuilder();
-
-            object[] objs = new object[this.Count];
-
-            for(int i = 0; i < this.Count; i++)
-            {
-                (string, object) clause = this[i];
-
-                str.Append("(").Append(string.Format(clause.Item1, "@" + (numberingStart + i))).Append(")");
-                objs[i] = clause.Item2;
-
-                if(i < this.Count - 1)
-                {
-                    str.Append(ClauseSeparator);
-                }
-            }
-
-            return (str.ToString(), objs);
-        }
-
+        
         /// <summary>
         /// Converts this where clause builder to a sql-compatible string.
         /// </summary>

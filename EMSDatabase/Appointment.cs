@@ -46,10 +46,8 @@ namespace EMSDatabase
             dsq.TryAddCondition("Month = {0}", Month);
             dsq.TryAddCondition("Day = {0}", Day);
             dsq.TryAddCondition("TimeSlot = {0}", Timeslot);
-
-            var (where_str, where_objs) = dsq.Get();
-
-            return FindMany("SELECT * FROM AppointmentInfo " + (dsq.Count > 0 ? "WHERE " : "") + where_str, where_objs);
+            
+            return FindMany("SELECT * FROM AppointmentInfo " + (dsq.Count > 0 ? "WHERE " : "") + dsq.GetQuery(), dsq.GetValues());
         }
 
         /// <summary>
