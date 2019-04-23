@@ -1,4 +1,10 @@
-﻿//Comment
+﻿/// PROJECT: EMS2
+/// FILE: Billing.cs
+/// AUTHOR: Billy Parmenter, Mike Ramoutsakis, Austin Zalac, Mike Hilts
+/// DATE: April 19 - 2019
+/// DESCRIPTION: This form will handle all of the billing functionality in 
+///              the UI.
+
 
 using EMSDatabase;
 using System;
@@ -20,7 +26,9 @@ namespace EMS2
         private BillableProcedureFactory billableProcedureFactory;
         private List<BillableProcedureStatus> bps = new List<BillableProcedureStatus>() { };
 
-
+        /// <summary>
+        /// This is the default billing constructor
+        /// </summary>
         public Billing()
         {
             peopleFactory = new PeopleFactory(queryFactory);
@@ -30,7 +38,12 @@ namespace EMS2
             genderFactory = new GenderFactory(queryFactory);
             billableProcedureFactory = new BillableProcedureFactory(queryFactory);
         }
-
+        /// <summary>
+        /// This function will generate the billing file to be displayed 
+        /// to the user.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public string GenerateSummary(DateTime date)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
@@ -64,7 +77,10 @@ namespace EMS2
 
             return billingOutput;
         }
-
+        /// <summary>
+        /// This function will handle a response file from the MOH
+        /// </summary>
+        /// <param name="readFile"></param>
         public void checkTransDB(List<string> readFile)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
@@ -103,7 +119,12 @@ namespace EMS2
 
 
 
-
+        /// <summary>
+        /// This function will generate the billing summary to be displayed to the user
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
         public string GenerateSummary(int year, int month)
         {
             Dictionary<BillableProcedure, Appointment> billableProcedures = GetBillableProcedures(year, month);
@@ -140,7 +161,13 @@ namespace EMS2
 
 
 
-
+        /// <summary>
+        /// This funtion will get a list of billable procedures and appointments
+        /// based on the year and the month selected.
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
         private Dictionary<BillableProcedure, Appointment> GetBillableProcedures(int year, int month)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
