@@ -20,7 +20,9 @@ namespace EMS2
         private BillableProcedureFactory billableProcedureFactory;
         private List<BillableProcedureStatus> bps = new List<BillableProcedureStatus>() { };
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Billing()
         {
             peopleFactory = new PeopleFactory(queryFactory);
@@ -30,12 +32,11 @@ namespace EMS2
             genderFactory = new GenderFactory(queryFactory);
             billableProcedureFactory = new BillableProcedureFactory(queryFactory);
         }
-        
-
-
-
-
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public string GenerateSummary(DateTime date)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
@@ -69,7 +70,10 @@ namespace EMS2
 
             return billingOutput;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="readFile"></param>
         public void checkTransDB(List<string> readFile)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
@@ -108,7 +112,12 @@ namespace EMS2
 
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
         public string GenerateSummary(int year, int month)
         {
             Dictionary<BillableProcedure, Appointment> billableProcedures = GetBillableProcedures(year, month);
@@ -145,7 +154,12 @@ namespace EMS2
 
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
         private Dictionary<BillableProcedure, Appointment> GetBillableProcedures(int year, int month)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
@@ -161,27 +175,6 @@ namespace EMS2
                 }
             }
             return bCodes;
-        }
-
-
-        private void readMaster(string path)
-        {
-            int counter = 0;  
-            string line;  
-  
-            // Read the file and display it line by line.  
-            System.IO.StreamReader file =   
-                new System.IO.StreamReader(@"c:\test.txt");  
-            while((line = file.ReadLine()) != null && counter < 16)  
-            {  
-                System.Console.WriteLine(line);  
-                counter++;  
-            }  
-  
-            file.Close();  
-            System.Console.WriteLine("There were {0} lines.", counter);  
-            // Suspend the screen.  
-            System.Console.ReadLine();  
         }
     }
 }
