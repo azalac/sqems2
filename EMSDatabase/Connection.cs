@@ -38,9 +38,9 @@ namespace EMSDatabase
             }
         }
 
-        public QueryFactory()
+        public QueryFactory(string connStr)
         {
-            ConnectionString = ConfigurationManager.ConnectionStrings["EMS_Database"]?.ConnectionString;
+            ConnectionString = connStr;
         }
 
         /// <summary>
