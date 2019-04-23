@@ -513,11 +513,11 @@ namespace EMSDatabase
         /// </summary>
         public string GetQuery()
         {
-            string sets = "";
+            string sets = "SET ";
 
             for(int i = 0; i < Count; i++)
             {
-                sets += string.Format("SET {0} = @{1}{2}",
+                sets += string.Format("{0} = @{1}{2}",
                     this[i].Item1, i,
                     // Only add a comma to the end if there is more columns to update
                     i < Count - 1 ? ", " : "");
