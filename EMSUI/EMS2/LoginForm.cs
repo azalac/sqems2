@@ -36,7 +36,7 @@ namespace EMS2
                 return;
             }
 
-            MainForm main = new MainForm(ConfigurationManager.ConnectionStrings["EMS_Database"]?.ConnectionString);
+            MainForm main = new MainForm(connStr);
             main.Closed += (s, args) => this.Close();
             main.Show();
             main.Activate();          
