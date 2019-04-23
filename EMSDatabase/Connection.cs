@@ -165,7 +165,7 @@ namespace EMSDatabase
         /// <returns>obj</returns>
         public static T Fill<T>(T obj, SqlDataReader reader, bool ignoreCase = true, bool errorOnInvalidFields = false)
         {
-            foreach(FieldInfo field in obj.GetType().GetFields())
+            foreach(FieldInfo field in obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 // Try to find a 'SQLColumnBinding' on the field, but if not found, just use the field name
                 string name = field.GetCustomAttribute<SQLColumnBinding>()?.ColumnName ?? field.Name;
