@@ -310,7 +310,7 @@ namespace EMSDatabase
                 _sex = sex;
             }
 
-            if(updater.TryAddColumn("dateOfBirth", dateOfBirth))
+            if(updater.TryAddColumn("dateBirth", dateOfBirth))
             {
                 _dateOfBirth = dateOfBirth;
             }
