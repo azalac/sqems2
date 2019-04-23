@@ -338,6 +338,7 @@
             this.generateSummaryButton.TabIndex = 1;
             this.generateSummaryButton.Text = "Generate Summary";
             this.generateSummaryButton.UseVisualStyleBackColor = true;
+            this.generateSummaryButton.Click += new System.EventHandler(this.generateSummaryButton_Click);
             this.generateSummaryButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // billingDate

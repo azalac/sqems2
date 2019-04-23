@@ -572,5 +572,10 @@ namespace EMS2
         {
             ui.ClearPatientInfo(textLabels, comboBoxLabels);
         }
+
+        private void generateSummaryButton_Click(object sender, EventArgs e)
+        {
+            billingOutput.Text = billing.GenerateSummary(billingDate.Value.Year, billingDate.Value.Month);
+        }
     }
 }
