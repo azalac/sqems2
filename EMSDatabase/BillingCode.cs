@@ -216,16 +216,17 @@ namespace EMSDatabase
             using (SqlCommand cmd = queryFactory.CreateQuery("SELECT [Status] FROM [BillableProcedure] WHERE AppointmentPatientID = @0 AND CodeID = @1",
                 AppointmentPatientID, BillingCodeID))
             {
-                _statusID = Convert.ToInt32(cmd.ExecuteScalar());
-            }
+                try
+                {
+                    _statusID = Convert.ToInt32(cmd.ExecuteScalar());
+                    return statusFactory.Find(_statusID.Value) ?? statusFactory.None;
 
-            if(_statusID == null)
-            {
-                return statusFactory.None;
-            }
-            else
-            {
-                return statusFactory.Find(_statusID.Value) ?? statusFactory.None;
+                }
+                catch
+                {
+                    return statusFactory.None;
+
+                }
             }
         }
 
