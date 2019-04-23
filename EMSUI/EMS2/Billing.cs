@@ -18,6 +18,8 @@ namespace EMS2
         private AppointmentPatientFactory appointmentPatientFactory;
         private GenderFactory genderFactory;
         private BillableProcedureFactory billableProcedureFactory;
+        private List<BillableProcedureStatus> bps = new List<BillableProcedureStatus>() { };
+
 
         public Billing()
         {
@@ -63,7 +65,41 @@ namespace EMS2
             return billingOutput;
         }
 
+        public void checkTransDB(List<string> readFile)
+        {
+            Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
+            ProcedureStatusFactory procedureStatusFactory = new ProcedureStatusFactory(queryFactory);
 
+            int year = 0;
+            int month = 0;
+            string bcode = string.Empty;
+            string hcn = string.Empty;
+            string statusName = string.Empty;
+
+            foreach (string s in readFile)
+            {
+                year = Int32.Parse(s.Substring(0, 4));
+                month = Int32.Parse(s.Substring(4, 2));
+                hcn = s.Substring(8, 12);
+                bcode = s.Substring(21, 4);
+                statusName = s.Substring(36, 4);
+
+
+                bCodes = getBCodes(year, month);
+
+                foreach (KeyValuePair<BillableProcedure, Appointment> pair in bCodes)
+                {
+                    if (year == pair.Value.Year && month == pair.Value.Month && hcn == pair.Value.PatientHCN && bcode == pair.Key.CodeName)
+                    {
+                        BillableProcedureStatus billableProcedureStatus = pair.Key.GetStatus();
+                        if (billableProcedureStatus.ID == procedureStatusFactory.None.ID)
+                        {
+                            pair.Key.SetStatus(procedureStatusFactory.Find(statusName));
+                        }
+                    }
+                }
+            }
+        }
 
         private Dictionary<BillableProcedure, Appointment> getBCodes(int year, int month)
         {
