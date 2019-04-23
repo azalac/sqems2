@@ -14,15 +14,17 @@ namespace EMS2
 {
     public partial class MainForm : Form
     {
-        private QueryFactory queryFactory = new QueryFactory();
+        private string connStr;
+
+        private QueryFactory queryFactory;
         private AppointmentFactory appointmentFactory;
         private PeopleFactory peopleFactory;
 
 
-        private Billing billing = new Billing();
+        private Billing billing;
         private UI ui = new UI();
-        private Demographics demographics = new Demographics();
-        private TimeSlotFactory timeSlotFactory = new TimeSlotFactory();
+        private Demographics demographics;
+        private TimeSlotFactory timeSlotFactory;
         private FileIO fileIO = new FileIO(); 
 
 
@@ -45,10 +47,15 @@ namespace EMS2
         /// <summary>
         /// 
         /// </summary>
-        public MainForm()
+        public MainForm(string _connStr)
         {
+            connStr = _connStr;
+            queryFactory = new QueryFactory(connStr);
             appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
             peopleFactory = new PeopleFactory(queryFactory);
+            billing = new Billing(connStr);
+            demographics = new Demographics(connStr);
+            timeSlotFactory = new TimeSlotFactory(connStr);
 
 
 
@@ -457,7 +464,7 @@ namespace EMS2
             if (timeSlot.available == true)
             {
 
-                FindPatientWindow findPatientWindow = new FindPatientWindow(timeSlot);
+                FindPatientWindow findPatientWindow = new FindPatientWindow(timeSlot, connStr);
                 findPatientWindow.ShowDialog();
             }
             if (timeSlot.available == false)
@@ -471,7 +478,7 @@ namespace EMS2
                     }
                 }
 
-                AppointmentBilling appointmentBilling = new AppointmentBilling(selectedAppointment);
+                AppointmentBilling appointmentBilling = new AppointmentBilling(selectedAppointment, connStr);
 
                 appointmentBilling.ShowDialog();
 

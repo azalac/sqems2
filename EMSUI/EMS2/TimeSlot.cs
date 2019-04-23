@@ -18,7 +18,7 @@ namespace EMS2
         public List<TimeSlot> slots = new List<TimeSlot>();
         public TimeSlot selectedSlot = new TimeSlot();
 
-        private QueryFactory queryFactory = new QueryFactory();
+        private QueryFactory queryFactory;
         private PeopleFactory peopleFactory;
         private AppointmentFactory appointmentFactory;
         private HouseholdFactory householdFactory;
@@ -27,8 +27,9 @@ namespace EMS2
         private BillableProcedureFactory billableProcedureFactory;
 
 
-        public TimeSlotFactory()
+        public TimeSlotFactory(string connStr)
         {
+            queryFactory = new QueryFactory(connStr);
             peopleFactory = new PeopleFactory(queryFactory);
             appointmentFactory = new AppointmentFactory(queryFactory, peopleFactory);
             householdFactory = new HouseholdFactory(queryFactory);

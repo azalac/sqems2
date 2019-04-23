@@ -20,7 +20,7 @@ namespace EMS2
     public partial class FindPatientWindow : Form
     {
         // The factories being useed
-        private static QueryFactory query = new QueryFactory();
+        private static QueryFactory query;
         private static PeopleFactory peopleFactory = new PeopleFactory(query);
         private AppointmentFactory appointmentFactory = new AppointmentFactory(query, peopleFactory);
 
@@ -38,14 +38,15 @@ namespace EMS2
         Dictionary<TextBox, ListBox> pairs = new Dictionary<TextBox, ListBox>();
 
 
-
+ 
 
 
         /// <summary>
         /// The form constructor
         /// </summary>
-        public FindPatientWindow(TimeSlot slot)
+        public FindPatientWindow(TimeSlot slot, string connStr)
         {
+            query = new QueryFactory(connStr);
             timeSlot = slot;
 
             InitializeComponent();
