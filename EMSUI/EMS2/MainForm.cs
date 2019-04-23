@@ -367,29 +367,7 @@ namespace EMS2
         {
             if (tabs.TabIndex == 0 && sender.GetType().Name == "TabControl")
             {
-                if (e.KeyCode == Keys.S)
-                {
-                    try
-                    {
-                        appSlots.SelectedIndex++;
-                    }
-                    catch
-                    {
-                        appSlots.SelectedIndex = 0;
-                    }
-                }
-
-                if (e.KeyCode == Keys.W)
-                {
-
-                    appSlots.SelectedIndex--;
-                    if (appSlots.SelectedIndex == -1)
-                    {
-                        appSlots.SelectedIndex = appSlots.Items.Count - 1;
-
-                    }
-                }
-
+          
                 if (e.KeyCode == Keys.Enter)
                 {
                     if (calendar.BoldedDates.Count() == 0)
@@ -574,6 +552,19 @@ namespace EMS2
         {
             appSlots.DataSource = null;
             appSlots.DataSource = timeSlotFactory.slots;
+        }
+
+
+        private void selectFileButton_Click(object sender, EventArgs e)
+        {
+            List<string> fileRead;
+            string path = string.Empty;
+            path = fileIO.openFile();
+            fileRead = fileIO.ReadReconcile(path);
+
+            billing.checkTransDB(fileRead);
+
+            //year,month,day,hcn,gender,bCode,numZeros,price,00
         }
 
 
