@@ -34,7 +34,7 @@ namespace EMS2
         public string GenerateSummary(DateTime date)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
-            bCodes = getBCodes(date.Year, date.Month);
+            bCodes = GetBillableProcedures(date.Year, date.Month);
 
             string billingOutput = "";
 
@@ -85,23 +85,63 @@ namespace EMS2
                 statusName = s.Substring(36, 4);
 
 
-                bCodes = getBCodes(year, month);
+                bCodes = GetBillableProcedures(year, month);
 
                 foreach (KeyValuePair<BillableProcedure, Appointment> pair in bCodes)
                 {
                     if (year == pair.Value.Year && month == pair.Value.Month && hcn == pair.Value.PatientHCN && bcode == pair.Key.CodeName)
                     {
                         BillableProcedureStatus billableProcedureStatus = pair.Key.GetStatus();
-                        if (billableProcedureStatus.ID == procedureStatusFactory.None.ID)
-                        {
+                        //if (billableProcedureStatus.ID == procedureStatusFactory.None.ID)
+                        //{
                             pair.Key.SetStatus(procedureStatusFactory.Find(statusName));
-                        }
+                        //}
                     }
                 }
             }
         }
 
-        private Dictionary<BillableProcedure, Appointment> getBCodes(int year, int month)
+
+
+
+        public string GenerateSummary(int year, int month)
+        {
+            Dictionary<BillableProcedure, Appointment> billableProcedures = GetBillableProcedures(year, month);
+
+            ProcedureStatusFactory procedureStatusFactory = new ProcedureStatusFactory(queryFactory);
+
+            int totalEncountersBilled = billableProcedures.Count();
+            double totalBilled = 0;
+            double receivedTotal = 0;
+            int numberOfFollowUps = 0;
+
+            foreach(KeyValuePair<BillableProcedure, Appointment> pair in billableProcedures)
+            {
+                BillableProcedure procedure = pair.Key;
+
+                totalBilled += procedure.Price;
+
+                if(procedure.Status.ID == procedureStatusFactory.Paid.ID)
+                {
+                    receivedTotal += procedure.Price;
+                }
+                else if (procedure.Status.ID == procedureStatusFactory.ContactMoH.ID || procedure.Status.ID == procedureStatusFactory.InvalidHCN.ID)
+                {
+                    numberOfFollowUps++;
+                }
+            }
+
+            double receivedPercent = (receivedTotal / totalBilled) * 100;
+            double averageBilling = (receivedTotal / totalEncountersBilled);
+
+            return string.Format("Total Enc. Billed = {0}\nTotal Billed = ${1:#.00}\nRec'd Total = ${2:#.00}\nRec'd Percrnt = {3:#.00}%\nAvg Billing = ${4:#.00}\nNo. Followup = {5}",
+                totalEncountersBilled, totalBilled, receivedTotal, receivedPercent, averageBilling, numberOfFollowUps);
+        }
+
+
+
+
+        private Dictionary<BillableProcedure, Appointment> GetBillableProcedures(int year, int month)
         {
             Dictionary<BillableProcedure, Appointment> bCodes = new Dictionary<BillableProcedure, Appointment>();
 
