@@ -24,6 +24,7 @@ namespace EMS2
         private AppointmentPatientFactory appointmentPatientFactory;
         private GenderFactory genderFactory;
         private BillableProcedureFactory billableProcedureFactory;
+        private BillingCodeFactory billingCodeFactory;
         private List<BillableProcedureStatus> bps = new List<BillableProcedureStatus>() { };
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace EMS2
             householdFactory = new HouseholdFactory(queryFactory);
             appointmentPatientFactory = new AppointmentPatientFactory(queryFactory, appointmentFactory, peopleFactory);
             genderFactory = new GenderFactory(queryFactory);
+            billingCodeFactory = new BillingCodeFactory(queryFactory);
             billableProcedureFactory = new BillableProcedureFactory(queryFactory);
         }
         /// <summary>
@@ -117,6 +119,15 @@ namespace EMS2
             }
         }
 
+
+        /// <summary>
+        /// Loads the valid billing codes from a file and puts them in the database
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        public void ReloadMasterBillingCodes(string path)
+        {
+            billingCodeFactory.SetMasterCodes(BillingCodeFactory.ParseCodesFromFile(path));
+        }
 
 
         /// <summary>

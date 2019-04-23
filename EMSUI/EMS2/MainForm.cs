@@ -611,5 +611,17 @@ namespace EMS2
         {
             billingOutput.Text = billing.GenerateSummary(billingDate.Value.Year, billingDate.Value.Month);
         }
+
+        private void loadMasterCodeButton_Click(object sender, EventArgs e)
+        {
+            FileDialog fileDialog = new OpenFileDialog();
+
+            fileDialog.FileOk += (_sender, args) =>
+            {
+                billing.ReloadMasterBillingCodes(fileDialog.FileName);
+            };
+
+            fileDialog.ShowDialog();
+        }
     }
 }

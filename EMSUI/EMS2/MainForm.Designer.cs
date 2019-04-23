@@ -70,6 +70,7 @@
             this.billingOutput = new System.Windows.Forms.RichTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
+            this.loadMasterCodeButton = new System.Windows.Forms.Button();
             this.tabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -519,6 +520,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.loadMasterCodeButton);
             this.tabPage4.Controls.Add(this.button1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
@@ -536,6 +538,16 @@
             this.button1.Text = "Select File";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.selectFileButton_Click);
+            // 
+            // loadMasterCodeButton
+            // 
+            this.loadMasterCodeButton.Location = new System.Drawing.Point(85, 4);
+            this.loadMasterCodeButton.Name = "loadMasterCodeButton";
+            this.loadMasterCodeButton.Size = new System.Drawing.Size(124, 23);
+            this.loadMasterCodeButton.TabIndex = 1;
+            this.loadMasterCodeButton.Text = "Load Master Codes";
+            this.loadMasterCodeButton.UseVisualStyleBackColor = true;
+            this.loadMasterCodeButton.Click += new System.EventHandler(this.loadMasterCodeButton_Click);
             // 
             // MainForm
             // 
@@ -599,6 +611,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox billingOutput;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button loadMasterCodeButton;
     }
 }
 

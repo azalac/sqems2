@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace EMSDatabase
 {
@@ -25,6 +27,114 @@ namespace EMSDatabase
         public List<BillingCode> Similar(string code, int max = 10)
         {
             return FindMany("SELECT TOP(@0) * FROM MasterBillingCode WHERE Code LIKE @1", max, string.Format("%{0}%", code));
+        }
+        
+        /// <summary>
+        /// Sets the master codes. Does nothing if a code already exists with the required information.
+        /// If a code does not exist in the new codes, its 
+        /// </summary>
+        public void SetMasterCodes(BillingCode[] billingCodes)
+        {
+            HashSet<string> existingCodes = GetAvailableCodes();
+            HashSet<string> providedCodes = new HashSet<string>(billingCodes.Select(code => code.Code));
+            Dictionary<string, BillingCode> codesById = billingCodes.ToDictionary(code => code.Code);
+
+            PruneIntersections(existingCodes, providedCodes);
+
+            // existingCodes now contains all codes which will be removed (NeedsRemoval will get set to 1)
+            // providedCodes now contains all codes which will be added
+
+            using (SqlCommand remove = queryFactory.CreateQuery("UPDATE MasterBillingCode SET NeedsRemoval = 1 WHERE Code = @0", ""))
+            {
+                foreach (string toberemoved in existingCodes)
+                {
+                    remove.Parameters[0].Value = toberemoved;
+
+                    remove.ExecuteNonQuery();
+                }
+            }
+
+            using (SqlCommand add = queryFactory.CreateQuery("INSERT INTO MasterBillingCode (Code, StartDate, Price) VALUES (@0, @1, @2)", "", DateTime.Now, 0.0))
+            {
+                foreach (string tobeadded in providedCodes)
+                {
+                    BillingCode code = codesById[tobeadded];
+
+                    add.Parameters[0].Value = code.Code;
+                    add.Parameters[1].Value = code.StartDate;
+                    add.Parameters[2].Value = code.Price;
+
+                    add.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the current codes in the database which have NeedsRemoval == 0
+        /// </summary>
+        private HashSet<string> GetAvailableCodes()
+        {
+            using (SqlCommand cmd = queryFactory.CreateQuery("SELECT Code FROM MasterBillingCode WHERE NeedsRemoval = 0"))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    HashSet<string> codes = new HashSet<string>();
+
+                    while(reader.Read())
+                    {
+                        codes.Add(reader.GetString(0));
+                    }
+
+                    return codes;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the intersecting items between two hashsets
+        /// </summary>
+        private void PruneIntersections<T>(HashSet<T> one, HashSet<T> two)
+        {
+            // get all similar items
+            HashSet<T> similar = new HashSet<T>(one.Where(i => two.Contains(i)));
+            
+            foreach(T t in similar)
+            {
+                one.Remove(t);
+                two.Remove(t);
+            }
+        }
+        
+        /// <summary>
+        /// Gets all valid billing codes from the given file
+        /// </summary>
+        public static BillingCode[] ParseCodesFromFile(string path)
+        {
+            string[] lines = File.ReadAllLines(path);
+
+            Regex matcher = new Regex(@"^(?'code'[a-zA-Z]\d{3})(?'year'\d{4})(?'month'(1[0-2])|(0[1-9]))(?'day'[0-3][1-9])(?'price1'\d{7})(?'price2'\d{4})$");
+
+            // find all lines which match the regex
+            Match[] matches = lines.Select(str => str.Trim()).Select(str => matcher.Match(str)).Where(m => m.Success).ToArray();
+            List<BillingCode> codes = new List<BillingCode>();
+
+            foreach(Match match in matches)
+            {
+                string code = match.Groups["code"].Value;
+                
+                if( !int.TryParse(match.Groups["year"].Value, out int year) ||
+                    !int.TryParse(match.Groups["month"].Value, out int month) ||
+                    !int.TryParse(match.Groups["day"].Value, out int day) ||
+                    !double.TryParse(match.Groups["price1"].Value + "." + match.Groups["price2"].Value, out double price))
+                {
+                    // should never be invalid
+                    continue;
+                }
+
+                codes.Add(new BillingCode(code, new DateTime(year, month, day), price));
+            }
+
+            return codes.ToArray();
         }
 
         protected override BillingCode CreateObject(SqlDataReader reader)
@@ -144,6 +254,18 @@ namespace EMSDatabase
         public readonly string Code;
         public readonly DateTime StartDate;
         public readonly double Price;
+
+        public BillingCode()
+        {
+
+        }
+
+        public BillingCode(string Code, DateTime start, double Price)
+        {
+            this.Code = Code;
+            this.StartDate = start;
+            this.Price = Price;
+        }
 
         public string display { get => Display(); }
 
