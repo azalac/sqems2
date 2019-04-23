@@ -48,7 +48,7 @@ namespace EMS2
             if (headOfHouse != "")
             {
                 found = peopleFactory.Find(null, null, null, headOfHouse);
-
+                
                 if (found.Count > 0)
                 {
                     createdPerson = peopleFactory.Create(firstName, middleInitial, lastName, HCN, DateOfBirth, sex, houseID);
@@ -66,6 +66,58 @@ namespace EMS2
             return houseID;
         }
 
+
+
+
+        public void UpdatePatient(Person person, string firstName, string middleInitial, string lastName, string HCN,
+            DateTime DateOfBirth, int sex)
+        {
+            EditablePerson editablePerson = person.StartEditing();
+
+            editablePerson.firstName = firstName;
+            editablePerson.mInitial = middleInitial;
+            editablePerson.lastName = lastName;
+            editablePerson.HCN = HCN;
+            editablePerson.DateOfBirth = DateOfBirth;
+            editablePerson.sex = sex;
+
+            editablePerson.CommitChanges();
+        }
+
+        public bool UpdateHouseHold(Person person, string headOfHouse, string Address1 = null, string Address2 = null, string City = null,
+            string Province = null, string PhoneNumber = null)
+        {
+            bool ret = false;
+            int? houseID = null;
+
+            if (headOfHouse != "")
+            {
+                found = peopleFactory.Find(null, null, null, headOfHouse);
+
+                if (found.Count > 0)
+                {
+                    houseID = found[0].GetHousehold();
+
+                }
+            }
+            else
+            {
+                household = householdFactory.FindOrCreate(Address1, Address2, City, Province, PhoneNumber);
+
+                household.HeadOfHouse = person.ID;
+
+                houseID = household.ID;
+            }
+
+            if (houseID != null)
+            {
+                person.HouseholdID = houseID;
+
+                ret = true;
+            }
+
+            return ret;
+        }
 
 
 

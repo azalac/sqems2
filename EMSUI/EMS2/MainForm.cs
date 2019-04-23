@@ -33,8 +33,8 @@ namespace EMS2
 
 
         private List<Appointment> appointments;
-       
 
+        private Person foundPerson;
         private Appointment recallAppointment;
 
         private Color red = Color.Red;
@@ -244,7 +244,38 @@ namespace EMS2
         {
             if (CheckNullPatientInfo(true) == 0)
             {
-                patientMessage.Text = "Updated";
+
+
+                bool created = demographics.UpdateHouseHold(foundPerson,
+                                             headOfHouseTextBox.Text,
+                                             address1TextBox.Text,
+                                             address2TextBox.Text,
+                                             cityTextBox.Text,
+                                             (string)provinceComboBox.SelectedItem,
+                                             phoneNumberTextBox.Text);
+                if (created)
+                {
+                    demographics.UpdatePatient(foundPerson,
+                                           fNameTextBox.Text,
+                                           mInitialTextBox.Text,
+                                           lNameTextBox.Text,
+                                           healthCardTextBox.Text,
+                                           dateOfBirthDTP.Value,
+                                           sexComboBox.SelectedIndex + 1);
+                    string message = "Patient updated";
+                    string title = "Updated";
+                    MessageBox.Show(message, title);
+
+                    ClearPatientInfo();
+
+                    patientMessage.Text = "";
+                    HOHLabel.ForeColor = black;
+                }
+                else
+                {
+                    patientMessage.Text = "Head of house not found";
+                    HOHLabel.ForeColor = red;
+                }
             }
             else
             {
@@ -287,6 +318,9 @@ namespace EMS2
                     MessageBox.Show(message, title);
 
                     ClearPatientInfo();
+
+                    patientMessage.Text = "";
+                    HOHLabel.ForeColor = black;
                 }
                 else
                 {
@@ -476,7 +510,7 @@ namespace EMS2
             if (found.Count == 1)
             {
                 patientMessage.Text = "Patient Found. Change the fields below to update their information.";
-                Person foundPerson = found[0];
+                foundPerson = found[0];
 
                 healthCardTextBox.Text = foundPerson.HCN;
                 lNameTextBox.Text = foundPerson.lastName;
