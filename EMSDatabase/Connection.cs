@@ -288,7 +288,7 @@ namespace EMSDatabase
     /// <summary>
     /// Builds an sql where clause
     /// </summary>
-    public class SqlWhereClauseBuilder: List<(string, object)>
+    public class SqlWhereClauseBuilder: List<Tuple<string, object>>
     {
         public string ClauseSeparator { get; set; } = " AND ";
         
@@ -312,7 +312,7 @@ namespace EMSDatabase
         {
             if(!EqualityComparer<T>.Default.Equals(value, illegalValue))
             {
-                Add((clause, value));
+                Add(new Tuple<string, object>(clause, value));
             }
         }
         
@@ -323,7 +323,7 @@ namespace EMSDatabase
         /// <param name="value">The value</param>
         public void AddCondition(string clause, object value)
         {
-            Add((clause, value));
+            Add(new Tuple<string, object>(clause, value));
         }
         
         /// <summary>
@@ -339,7 +339,7 @@ namespace EMSDatabase
         {
             if (!EqualityComparer<T>.Default.Equals(value, illegalValue))
             {
-                Add((clause, value));
+                Add(new Tuple<string, object>(clause, value));
             }
             else
             {
@@ -358,7 +358,7 @@ namespace EMSDatabase
             
             for (int i = 0; i < this.Count; i++)
             {
-                (string, object) clause = this[i];
+                var clause = this[i];
 
                 str.Append("(").Append(string.Format(clause.Item1, "@" + (i + numberingStart))).Append(")");
 
@@ -380,7 +380,7 @@ namespace EMSDatabase
 
             for (int i = 0; i < this.Count; i++)
             {
-                (string, object) clause = this[i];
+                var clause = this[i];
                 
                 objs[i] = clause.Item2;
                 
@@ -394,7 +394,7 @@ namespace EMSDatabase
     /// <summary>
     /// Builds an sql insert query for a single row
     /// </summary>
-    class SqlInsertBuilder : List<(string, object)>
+    class SqlInsertBuilder : List<Tuple<string, object>>
     {
         /// <summary>
         /// The table to insert into.
@@ -411,7 +411,7 @@ namespace EMSDatabase
         {
             if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
             {
-                Add((colName, colValue));
+                Add(new Tuple<string, object>(colName, colValue));
             }
         }
 
@@ -426,7 +426,7 @@ namespace EMSDatabase
         {
             if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
             {
-                Add((colName, colValue));
+                Add(new Tuple<string, object>(colName, colValue));
             }
             else
             {
@@ -467,7 +467,7 @@ namespace EMSDatabase
 
     }
 
-    public class SqlUpdateBuilder : List<(string, object)>
+    public class SqlUpdateBuilder : List<Tuple<string, object>>
     {
         public string Table { get; set; }
         public SqlWhereClauseBuilder RowSelector { get; set; }
@@ -483,7 +483,7 @@ namespace EMSDatabase
         {
             if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
             {
-                Add((colName, colValue));
+                Add(new Tuple<string, object>(colName, colValue));
                 return true;
             }
             return false;
@@ -500,7 +500,7 @@ namespace EMSDatabase
         {
             if (!EqualityComparer<T>.Default.Equals(colValue, illegalValue))
             {
-                Add((colName, colValue));
+                Add(new Tuple<string, object>(colName, colValue));
             }
             else
             {
