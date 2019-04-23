@@ -36,8 +36,13 @@ namespace EMSDatabase
 
             if(household == null)
             {
-                Create(Address1, Address2, City, Province, PhoneNumber);
-                household = Find(Address1, Address2, City, Province, PhoneNumber);
+                int? id = Create(Address1, Address2, City, Province, PhoneNumber);
+
+                // if the create was successful, get the new household
+                if (id != null)
+                {
+                    household = Find(id.Value);
+                }
             }
 
             return household;
@@ -66,7 +71,8 @@ namespace EMSDatabase
         /// <summary>
         /// Creates a household with the given information, does not return it.
         /// </summary>
-        private void Create(string Address1 = null, string Address2 = null, string City = null,
+        /// <returns>The ID of the created household</returns>
+        private int? Create(string Address1 = null, string Address2 = null, string City = null,
             string Province = null, string PhoneNumber = null)
         {
             SqlInsertBuilder insertBuilder = new SqlInsertBuilder()
@@ -80,9 +86,9 @@ namespace EMSDatabase
             insertBuilder.TryAddColumn("province", Province);
             insertBuilder.TryAddColumn("numPhone", PhoneNumber);
 
-            using (SqlCommand cmd = queryFactory.CreateQuery(insertBuilder.GetQuery(), insertBuilder.GetValues()))
+            using (SqlCommand cmd = queryFactory.CreateQuery(insertBuilder.GetQuery() + ";SELECT SCOPE_IDENTITY()", insertBuilder.GetValues()))
             {
-                cmd.ExecuteNonQuery();
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
 
