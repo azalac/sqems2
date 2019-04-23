@@ -159,7 +159,14 @@ namespace EMS2
             return error;
         }
 
+        private int ValidatePatientInfo(bool update = false)
+        {
+            int error = 0;
 
+            error = ui.ValidateInfo(personTextLabels, headTextLabels, update);
+
+            return error;
+        }
 
 
 
@@ -271,7 +278,7 @@ namespace EMS2
         private void AddPatientButton_Click(object sender, EventArgs e)
         {
             // If validated
-            if (CheckNullPatientInfo() == 0)
+            if (CheckNullPatientInfo() == 0 && ValidatePatientInfo() == 0)
             {
                 int? result = demographics.AddPatient(fNameTextBox.Text,
                                                    mInitialTextBox.Text[0],

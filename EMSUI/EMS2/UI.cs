@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace EMS2
 {
@@ -75,7 +76,72 @@ namespace EMS2
         }
 
 
+        public int Validate(TextBox tb, Label label)
+        {
+            int ret = 0;
+            Regex regex = null;
 
+            if (!tb.Text.Equals(""))
+            {
+                switch (label.Text)
+                {
+                    case "Health Card #":
+                    case "Head Of Household":
+                        tb.Text = tb.Text.ToUpper();
+                        regex = new Regex(@"^[0-9]{10,10}[A-Z]{2,2}$");
+                        break;
+                    case "Last Name":
+                    case "First Name":
+                        tb.Text = (tb.Text.Length > 40) ? tb.Text.Substring(0, 40) : tb.Text;
+                        regex = new Regex(@"^[-'a-zA-Z]+$");
+                        break;
+                    case "Middle Initial":
+                        tb.Text = tb.Text.Substring(0, 1).ToUpper();
+                        regex = new Regex(@"^[a-zA-Z]$");
+                        break;
+                    case "Address Line 1":
+                        tb.Text = (tb.Text.Length > 40) ? tb.Text.Substring(0, 40) : tb.Text;
+                        regex = new Regex("^[0-9]{1,}[-]?[0-9]* [a-zA-Z'-]{1,}" +
+                                          " [a-zA-Z.]{1,}[ ]?[eEwWnNsS.]{0,2}$");
+                        break;
+                    case "Address Line 2":
+                        tb.Text = (tb.Text.Length > 40) ? tb.Text.Substring(0, 40) : tb.Text;
+                        regex = new Regex(@"^[.a-zA-Z0-9\s]+$");
+                        break;
+                    case "City":
+                        tb.Text = (tb.Text.Length > 40) ? tb.Text.Substring(0, 40) : tb.Text;
+                        regex = new Regex(@"^[.\'a-zA-Z\s-]+$");
+                        break;
+                    case "Phone Number":
+                        if (tb.Text.Length == 10)
+                        {
+                            tb.Text = tb.Text.Substring(0, 3) + "-" + tb.Text.Substring(3, 3) + "-" + tb.Text.Substring(6);
+                        }
+                        tb.Text.Replace(" ", "-");
+                        regex = new Regex("[0-9]{3,3}-[0-9]{3,3}-[0-9]{4,4}");
+                        break;
+                    default:
+                        regex = null;
+                        break;
+                }
+            }
+
+            if (regex != null)
+            {
+                if (!regex.Match(tb.Text).Success)
+                {
+                    label.ForeColor = red;
+                    ret = 1;
+                }
+                else
+                {
+                    label.ForeColor = black;
+                    ret = 0;
+                }
+            }
+
+            return ret;
+        }
 
 
         /// <summary>
@@ -110,7 +176,33 @@ namespace EMS2
             return error;
         }
 
+        public int ValidateInfo(Dictionary<TextBox, Label> personTextLabels, Dictionary<TextBox, Label> headTextLabels, bool update = false)
+        {
+            int error = 0;
 
+            int i = 0;
+
+            foreach (KeyValuePair<TextBox, Label> textLabel in personTextLabels)
+            {
+                error += Validate(textLabel.Key, textLabel.Value);
+            }
+
+
+            if (headTextLabels.ElementAt(0).Key.Text == "" || update == true)
+            {
+                foreach (KeyValuePair<TextBox, Label> textLabel in headTextLabels)
+                {
+                    if (i != 0)
+                    {
+                        error += Validate(textLabel.Key, textLabel.Value);
+                    }
+                    i = 1;
+                }
+            }
+
+            return error;
+        }
+    
 
         public bool HouseHeadText_Changed(TextBox headOfHouseTextBox, Dictionary<TextBox, Label> headTextLabels)
         {
